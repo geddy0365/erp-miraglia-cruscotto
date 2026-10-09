@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1b3a2a">
+<meta name="description" content="Cruscotto ERP Miraglia S.r.l.: stato del sistema, KPI definitivi (REALE, verde), scenari SIMULATI (rosa), qualità dati, governance, audit.">
+<title>Cruscotto ERP Miraglia</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f4f3ee;--surface:#ffffff;--surface-2:#f0efe9;--line:#d9d7cf;
+  --ink:#141414;--ink-2:#4a4944;--ink-3:#77766f;
+  --reale:#1e7e34;--reale-bg:#e3f2e6;--simulato:#c2185b;--simulato-bg:#fbe4ec;
+  --attivo:#c62828;--attivo-ink:#ffffff;--disattivo:#f9a825;--disattivo-ink:#141414;
+  --good:#1e7e34;--warn:#b26a00;--serious:#c2185b;--critical:#8e0000;--neutral:#5b5a55;
+  --accent:#1b3a2a;--radius:14px;--gap:12px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#121311;--surface:#1c1e1b;--surface-2:#24272323;--surface-2:#242723;--line:#3a3d38;
+    --ink:#f2f1ec;--ink-2:#c9c8c0;--ink-3:#9a998f;
+    --reale:#43a047;--reale-bg:#1b2f1f;--simulato:#d81b60;--simulato-bg:#3a1a27;
+    --attivo:#d32f2f;--attivo-ink:#ffffff;--disattivo:#f9a825;--disattivo-ink:#141414;
+    --good:#43a047;--warn:#ffb74d;--serious:#ec407a;--critical:#ef5350;--neutral:#a3a29a;
+    --accent:#9bd3b0;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#121311;--surface:#1c1e1b;--surface-2:#242723;--line:#3a3d38;
+  --ink:#f2f1ec;--ink-2:#c9c8c0;--ink-3:#9a998f;
+  --reale:#43a047;--reale-bg:#1b2f1f;--simulato:#d81b60;--simulato-bg:#3a1a27;
+  --attivo:#d32f2f;--attivo-ink:#ffffff;--disattivo:#f9a825;--disattivo-ink:#141414;
+  --good:#43a047;--warn:#ffb74d;--serious:#ec407a;--critical:#ef5350;--neutral:#a3a29a;
+  --accent:#9bd3b0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:5;background:var(--accent);color:#fff;padding:10px 16px calc(10px);display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+header h1{font-size:17px;margin:0;flex:1;line-height:1.2}
+header h1 small{display:block;font-size:12px;font-weight:400;opacity:.85}
+.ver{font-size:12px;background:rgba(255,255,255,.18);padding:3px 8px;border-radius:999px;white-space:nowrap}
+main{padding:12px 16px;max-width:760px;margin:0 auto}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:var(--gap)}
+.card h2{font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h2 .badge{margin-left:auto}
+.card.reale{border-color:var(--reale);background:linear-gradient(0deg,var(--surface),var(--surface)),var(--surface)}
+.card.reale h2{color:var(--reale)}
+.card.simulato{border-color:var(--simulato)}
+.card.simulato h2{color:var(--simulato)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid transparent;white-space:nowrap}
+.badge.reale{color:var(--reale);background:var(--reale-bg);border-color:var(--reale)}
+.badge.simulato{color:var(--simulato);background:var(--simulato-bg);border-color:var(--simulato)}
+.badge.good{color:var(--good);border-color:var(--good)}
+.badge.warn{color:var(--warn);border-color:var(--warn)}
+.badge.serious{color:var(--serious);border-color:var(--serious)}
+.badge.critical{color:var(--critical);border-color:var(--critical)}
+.badge.neutral{color:var(--neutral);border-color:var(--neutral)}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{background:var(--surface-2);border-radius:10px;padding:10px 12px;min-height:64px}
+.tile .k{font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em}
+.tile .v{font-size:22px;font-weight:700;line-height:1.2;margin-top:2px;word-break:break-word}
+.tile .s{font-size:12px;color:var(--ink-2)}
+.tile.reale .v{color:var(--reale)}.tile.simulato .v{color:var(--simulato)}
+.muted{color:var(--ink-3);font-size:13px}
+.note{font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:10px;padding:10px 12px;margin-top:10px}
+button,.btn{appearance:none;border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer;background:var(--attivo);color:var(--attivo-ink);min-height:44px}
+button:disabled,button.off,.btn.off{background:var(--disattivo);color:var(--disattivo-ink)}
+button:disabled{cursor:not-allowed}
+button.sm{padding:8px 12px;min-height:40px;font-size:14px}
+button.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);padding:6px 10px;min-height:36px;font-weight:600;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input{font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);width:100%;min-height:48px}
+label{font-size:13px;color:var(--ink-2);display:block;margin:8px 0 4px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line);z-index:5}
+nav.tabs button{flex:1;padding:8px 2px;min-height:48px;font-size:12px;line-height:1.1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:10px}
+nav.tabs button span.ic{font-size:17px}
+.msg{padding:10px 12px;border-radius:10px;margin:10px 0;font-size:14px;border:1px solid var(--line);background:var(--surface-2)}
+.msg.err{border-color:var(--critical);color:var(--critical)}
+.msg.ok{border-color:var(--good)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-3);font-weight:600}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.list .it{padding:9px 0;border-bottom:1px solid var(--line)}
+.list .it:last-child{border-bottom:0}
+.it .t{font-weight:600;font-size:14px}
+.it .d{font-size:13px;color:var(--ink-2)}
+.chart{margin:8px 0 2px}
+.chart svg{width:100%;height:auto;display:block;touch-action:manipulation}
+.chart .bar{stroke:var(--surface);stroke-width:2px}
+.chart .axis{stroke:var(--line);stroke-width:1px}
+.chart .base{stroke:var(--ink-3);stroke-width:1px}
+.chart text{fill:var(--ink-2);font-size:11px}
+.chart text.lbl{fill:var(--ink-3);font-size:10px}
+.tip{font-size:13px;color:var(--ink-2);min-height:20px;margin-top:4px}
+.sect{font-size:13px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 6px}
+.hidden{display:none !important}
+.small{font-size:12px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:13px}
+.kv b{color:var(--ink-2);font-weight:600}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--ink-2);border-radius:50%;animation:sp 1s linear infinite;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (min-width:600px){.tiles{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Cruscotto ERP Miraglia<small id="hdrSub">Dashboard CEO · PROD</small></h1>
+  <span class="ver" id="verBadge">v—</span>
+  <button class="ghost" id="btnTheme" title="Tema chiaro/scuro">Tema</button>
+</header>
+<main id="main">
+  <noscript><div class="card">Il Cruscotto richiede JavaScript.</div></noscript>
+  <!-- LOGIN -->
+  <section id="viewLogin" class="card">
+    <h2>Accesso</h2>
+    <p class="muted">Solo utenti autorizzati (elenco <code>sec.app_users</code>). Ogni accesso viene registrato nell'audit.</p>
+    <form id="formLogin" autocomplete="on">
+      <label for="email">Email</label>
+      <input id="email" type="email" inputmode="email" autocomplete="username" required placeholder="nome@miragliaolive.com">
+      <label for="pwd">Password</label>
+      <input id="pwd" type="password" autocomplete="current-password" required placeholder="••••••••">
+      <div class="row" style="margin-top:12px">
+        <button type="submit" id="btnLogin">Entra</button>
+        <button type="button" class="sm" id="btnReset1" title="Cancella tutto e ricomincia">AZZERA</button>
+      </div>
+    </form>
+    <div id="loginMsg"></div>
+    <div class="note small">Per avere l'icona sul telefono: menu di Chrome ⋮ → <b>Aggiungi a schermata Home</b>. <span id="installHint"></span></div>
+  </section>
+
+  <!-- APP -->
+  <section id="viewApp" class="hidden">
+    <div class="row" style="margin-bottom:10px;flex-wrap:nowrap">
+      <span class="muted small" id="whoami" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      <button id="btnRefresh" class="sm">Aggiorna</button>
+      <button id="btnLogout" class="sm">Esci</button>
+    </div>
+    <div id="appMsg"></div>
+
+    <div id="tabStato">
+      <div class="card">
+        <h2>Stato del sistema <span class="badge neutral" id="oraServer"></span></h2>
+        <div class="tiles" id="tilesStato"></div>
+        <div class="note" id="noteStato"></div>
+      </div>
+      <div class="card">
+        <h2>Classi di dato <span class="badge reale">● REALE</span> <span class="badge simulato">◐ SIMULATO</span></h2>
+        <div class="tbl" id="classiDato"></div>
+        <p class="muted small">Principi 4-6 del Project: i dati simulati sono marcati, in rosa e separati; nessun KPI definitivo li usa.</p>
+      </div>
+      <div class="card">
+        <h2>Account</h2>
+        <div class="kv" id="accountKv"></div>
+        <details style="margin-top:10px"><summary class="small">Cambia password</summary>
+          <form id="formPwd"><label for="newPwd">Nuova password (min. 10 caratteri)</label><input id="newPwd" type="password" autocomplete="new-password" minlength="10" required>
+          <div class="row" style="margin-top:8px"><button type="submit">Salva password</button></div></form>
+          <div id="pwdMsg"></div>
+        </details>
+        <div class="row" style="margin-top:12px"><button id="btnReset2">AZZERA (cancella sessione e cache, ricomincia)</button></div>
+      </div>
+    </div>
+
+    <div id="tabKpi" class="hidden">
+      <div class="card reale">
+        <h2>KPI definitivi <span class="badge reale">● REALE · verificato</span></h2>
+        <div id="kpiReale"></div>
+      </div>
+      <div class="card simulato">
+        <h2>Scenari F-001 <span class="badge simulato">◐ SIMULATO</span></h2>
+        <p class="muted small">Anteprima del file Copilot F-001 (24 righe RAW): prezzi, costi e margini sono ipotesi (rosa); i <b>fusti</b> sono dichiarati REALI ma non ancora certificati (DEC-01). Non è un KPI.</p>
+        <div id="f001Charts"></div>
+        <details><summary class="small">Tabella completa</summary><div class="tbl" id="f001Table"></div></details>
+      </div>
+    </div>
+
+    <div id="tabDq" class="hidden">
+      <div class="card">
+        <h2>Qualità dei dati <span class="badge neutral" id="dqSummary"></span></h2>
+        <div class="list" id="dqList"></div>
+      </div>
+    </div>
+
+    <div id="tabGov" class="hidden">
+      <div class="card"><h2>Governance per modulo <span class="badge neutral" id="govSummary"></span></h2><div class="list" id="govList"></div></div>
+      <div class="card"><h2>File ricevuti (manifest)</h2><div class="list" id="manifestList"></div></div>
+      <div class="card"><h2>Dizionario KPI <span class="badge neutral" id="kpiDictSummary"></span></h2><div class="list" id="kpiDictList"></div></div>
+    </div>
+
+    <div id="tabAudit" class="hidden">
+      <div class="card"><h2>Ultime azioni registrate</h2><div class="tbl" id="auditTable"></div></div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs hidden" id="tabs">
+  <button data-tab="Stato"><span class="ic">▣</span>Stato</button>
+  <button data-tab="Kpi" class="off"><span class="ic">€</span>KPI</button>
+  <button data-tab="Dq" class="off"><span class="ic">✓</span>Qualità</button>
+  <button data-tab="Gov" class="off"><span class="ic">☷</span>Governance</button>
+  <button data-tab="Audit" class="off"><span class="ic">≡</span>Audit</button>
+</nav>
+
+<script>
+'use strict';
+const CFG = {
+  url: 'https://sqzxjuvxrtifhagjqjqq.supabase.co',
+  key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxenhqdXZ4cnRpZmhhZ2pxanFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MjkzMjYsImV4cCI6MjEwNzEwNTMyNn0.uy1gZj0fcRb37QpzcPi2S99ZroAdOq2BmutF82E20A0',
+  schema: 'api', app: 'cruscotto 0.2.0'
+};
+const LS = 'erp_cruscotto_session';
+const S = { session: null, data: {}, tab: 'Stato' };
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtN = (v, d=2) => (v === null || v === undefined || v === '' || isNaN(v)) ? '—' : Number(v).toLocaleString('it-IT', {minimumFractionDigits:d, maximumFractionDigits:d});
+const fmtI = (v) => (v === null || v === undefined) ? '—' : Number(v).toLocaleString('it-IT');
+const fmtPct = (v) => (v === null || v === undefined || isNaN(v)) ? '—' : (Number(v)*100).toLocaleString('it-IT', {minimumFractionDigits:1, maximumFractionDigits:1}) + '%';
+
+// ---------- tema ----------
+(function(){ try { const t = localStorage.getItem('erp_theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch(e){} })();
+$('btnTheme').onclick = () => {
+  const cur = document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('erp_theme', next); } catch(e){}
+};
+
+// ---------- sessione ----------
+function loadSession(){ try { const s = JSON.parse(localStorage.getItem(LS) || 'null'); if (s && s.access_token) S.session = s; } catch(e){ S.session = null; } }
+function saveSession(s){ S.session = s; try { if (s) localStorage.setItem(LS, JSON.stringify(s)); else localStorage.removeItem(LS); } catch(e){} }
+async function authPost(path, body, bearer){
+  const h = {'apikey': CFG.key, 'Content-Type': 'application/json'};
+  if (bearer) h['Authorization'] = 'Bearer ' + bearer;
+  const r = await fetch(CFG.url + path, {method:'POST', headers:h, body: JSON.stringify(body)});
+  let j = null; try { j = await r.json(); } catch(e){}
+  if (!r.ok) { const m = (j && (j.error_description || j.msg || j.message || j.error)) || ('HTTP ' + r.status); const e = new Error(m); e.status = r.status; e.body = j; throw e; }
+  return j;
+}
+async function login(email, pwd){
+  const j = await authPost('/auth/v1/token?grant_type=password', {email, password: pwd});
+  saveSession({access_token: j.access_token, refresh_token: j.refresh_token, expires_at: j.expires_at, email: (j.user && j.user.email) || email});
+}
+async function refreshSession(){
+  if (!S.session || !S.session.refresh_token) throw new Error('Sessione assente');
+  const j = await authPost('/auth/v1/token?grant_type=refresh_token', {refresh_token: S.session.refresh_token});
+  saveSession({access_token: j.access_token, refresh_token: j.refresh_token, expires_at: j.expires_at, email: (j.user && j.user.email) || S.session.email});
+}
+async function logout(){
+  try { if (S.session) await fetch(CFG.url + '/auth/v1/logout', {method:'POST', headers:{'apikey':CFG.key, 'Authorization':'Bearer ' + S.session.access_token}}); } catch(e){}
+  saveSession(null); S.data = {}; showLogin('');
+}
+async function changePassword(p){
+  const r = await fetch(CFG.url + '/auth/v1/user', {method:'PUT', headers:{'apikey':CFG.key, 'Authorization':'Bearer ' + S.session.access_token, 'Content-Type':'application/json'}, body: JSON.stringify({password: p})});
+  if (!r.ok) { let j=null; try{ j = await r.json(); }catch(e){} throw new Error((j && (j.msg || j.message || j.error_description)) || ('HTTP ' + r.status)); }
+}
+
+// ---------- API (PostgREST, schema api) ----------
+async function api(path, opts={}, retry=true){
+  if (!S.session) throw new Error('Non autenticato');
+  if (S.session.expires_at && (S.session.expires_at - 60) * 1000 < Date.now()) { try { await refreshSession(); } catch(e){} }
+  const h = {'apikey': CFG.key, 'Authorization': 'Bearer ' + S.session.access_token, 'Accept-Profile': CFG.schema, 'Content-Profile': CFG.schema};
+  if (opts.body) h['Content-Type'] = 'application/json';
+  const r = await fetch(CFG.url + '/rest/v1/' + path, {method: opts.method || 'GET', headers: h, body: opts.body ? JSON.stringify(opts.body) : undefined});
+  if (r.status === 401 && retry) { await refreshSession(); return api(path, opts, false); }
+  let j = null; try { j = await r.json(); } catch(e){}
+  if (!r.ok) {
+    const e = new Error((j && (j.message || j.hint)) || ('HTTP ' + r.status)); e.status = r.status; e.code = j && j.code; e.body = j; throw e;
+  }
+  return j;
+}
+const view = (name, q='select=*') => api(name + '?' + q);
+function explain(e){
+  if (!e) return 'Errore sconosciuto';
+  if (e.code === 'PGRST106' || /schema must be one of/i.test(e.message || '')) return 'Lo schema "api" non è esposto all\'API REST: nel pannello Supabase → Project Settings → Data API → "Exposed schemas" aggiungi "api" e salva. Poi premi Aggiorna.';
+  if (e.status === 401) return 'Sessione scaduta o non valida: esci e rientra.';
+  if (e.status === 403 || e.status === 404) return 'Accesso negato (' + e.status + '): ' + (e.message || '');
+  if (/Failed to fetch|NetworkError|Load failed/i.test(e.message || '')) return 'Rete non raggiungibile. Controlla la connessione e premi Aggiorna.';
+  return e.message || String(e);
+}
+
+// ---------- UI ----------
+function showLogin(msg, isErr){
+  $('viewLogin').classList.remove('hidden'); $('viewApp').classList.add('hidden'); $('tabs').classList.add('hidden');
+  $('loginMsg').innerHTML = msg ? '<div class="msg ' + (isErr ? 'err' : '') + '">' + esc(msg) + '</div>' : '';
+  $('hdrSub').textContent = 'Dashboard CEO · PROD';
+}
+function showApp(){ $('viewLogin').classList.add('hidden'); $('viewApp').classList.remove('hidden'); $('tabs').classList.remove('hidden'); setTab(S.tab); }
+function setTab(t){
+  S.tab = t;
+  ['Stato','Kpi','Dq','Gov','Audit'].forEach(x => { $('tab' + x).classList.toggle('hidden', x !== t); });
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('off', b.dataset.tab !== t));
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('nav.tabs button').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+function msg(id, text, cls){ $(id).innerHTML = text ? '<div class="msg ' + (cls||'') + '">' + text + '</div>' : ''; }
+
+$('formLogin').onsubmit = async (ev) => {
+  ev.preventDefault(); const b = $('btnLogin'); b.disabled = true; b.textContent = 'Accesso…';
+  try { await login($('email').value.trim().toLowerCase(), $('pwd').value); $('pwd').value = ''; await enter(); }
+  catch(e){ showLogin(/invalid|credentials|grant/i.test(e.message) ? 'Email o password errati.' : explain(e), true); }
+  finally { b.disabled = false; b.textContent = 'Entra'; }
+};
+$('btnLogout').onclick = logout;
+$('btnRefresh').onclick = () => refreshAll();
+$('formPwd').onsubmit = async (ev) => { ev.preventDefault(); try { await changePassword($('newPwd').value); $('newPwd').value=''; msg('pwdMsg', 'Password aggiornata.', 'ok'); } catch(e){ msg('pwdMsg', esc(explain(e)), 'err'); } };
+async function hardReset(){
+  if (!confirm('Azzerare il Cruscotto? Verranno cancellati sessione, tema e cache locale. Nessun dato del server viene toccato.')) return;
+  try { localStorage.clear(); sessionStorage.clear(); } catch(e){}
+  try { if ('caches' in window) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } } catch(e){}
+  try { if (navigator.serviceWorker) { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); } } catch(e){}
+  location.reload();
+}
+$('btnReset1').onclick = hardReset; $('btnReset2').onclick = hardReset;
+
+async function enter(){
+  showApp(); $('whoami').textContent = S.session.email || ''; await refreshAll();
+}
+async function refreshAll(){
+  const b = $('btnRefresh'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Aggiorno';
+  msg('appMsg', '');
+  try {
+    let touch = null;
+    try { touch = await api('rpc/fn_touch', {method:'POST', body:{p_client: CFG.app + ' · ' + navigator.userAgent.slice(0, 120)}}); } catch(e) { if (e.code === 'PGRST106' || /schema must be one of/i.test(e.message||'')) throw e; }
+    const stato = await view('v_stato_sistema');
+    if (!stato || !stato.length) {
+      msg('appMsg', '<b>Utente non autorizzato.</b> L\'indirizzo <code>' + esc(S.session.email) + '</code> è autenticato ma non è presente (o non è attivo) nell\'elenco <code>sec.app_users</code>: serve una migrazione per aggiungerlo. Il tentativo è stato registrato nell\'audit.', 'err');
+      renderEmpty(); return;
+    }
+    S.data.stato = stato[0];
+    const [gov, dq, man, classi, kpid, f001, kpi, audit] = await Promise.all([
+      view('v_governance_moduli'), view('v_dq_ultimo_esito'), view('v_manifest'), view('v_classi_dato'), view('v_kpi_dizionario'),
+      view('v_scenari_f001', 'select=*&order=riga_file'), view('v_kpi_mensili', 'select=*&order=anno,mese'), view('v_audit_recente')
+    ]);
+    Object.assign(S.data, {gov, dq, man, classi, kpid, f001, kpi, audit, touch});
+    renderAll();
+  } catch(e) { msg('appMsg', '<b>Errore:</b> ' + esc(explain(e)), 'err'); }
+  finally { b.disabled = false; b.textContent = 'Aggiorna'; }
+}
+function renderEmpty(){ ['tilesStato','classiDato','accountKv','kpiReale','f001Charts','f001Table','dqList','govList','manifestList','kpiDictList','auditTable'].forEach(id => $(id).innerHTML = ''); }
+
+function tile(k, v, s, cls){ return '<div class="tile ' + (cls||'') + '"><div class="k">' + esc(k) + '</div><div class="v">' + v + '</div>' + (s ? '<div class="s">' + s + '</div>' : '') + '</div>'; }
+function renderAll(){
+  const st = S.data.stato;
+  $('verBadge').textContent = 'v' + st.versione; $('oraServer').textContent = 'server ' + st.ora_server_rome;
+  $('hdrSub').textContent = 'Dashboard CEO · PROD · ' + (st.ruolo || '').replace('erp_', '');
+  $('tilesStato').innerHTML =
+    tile('Versione in PROD', esc(st.versione), 'rilascio ' + esc(st.ultimo_rilascio_rome)) +
+    tile('KPI definitivi', st.kpi_definitivi_disponibili ? '<span class="badge reale">● disponibili</span>' : 'in attesa', st.kpi_definitivi_disponibili ? 'dati REALI verificati' : 'nessun dato REALE verificato', st.kpi_definitivi_disponibili ? 'reale' : '') +
+    tile('Righe REALE', fmtI(st.righe_reale), 'verde · verificabili', 'reale') +
+    tile('Righe SIMULATO', fmtI(st.righe_simulato), 'rosa · mai nei KPI', 'simulato') +
+    tile('File ricevuti', fmtI(st.sorgenti), fmtI(st.sorgenti_verificate) + ' verificati') +
+    tile('Caricamenti', fmtI(st.batch_ok) + ' OK', (st.batch_non_ok ? fmtI(st.batch_non_ok) + ' non OK' : 'nessun errore')) +
+    tile('Qualità dati', fmtI(st.dq_violazioni) + ' <span class="small">violazioni</span>', fmtI(st.dq_ok) + ' OK su ' + fmtI(st.dq_regole) + ' regole · ' + esc(st.ultimo_dq_rome || '—')) +
+    tile('Governance', fmtI(st.moduli_ratificati) + ' moduli', 'ratificati · KPI definiti ' + fmtI(st.kpi_definiti) + ', approvati ' + fmtI(st.kpi_approvati));
+  $('noteStato').innerHTML = st.kpi_definitivi_disponibili ? 'I KPI definitivi sono calcolati solo su dati REALI verificati dello scenario REALE (dizionario KPI v1).' :
+    '<b>Perché i KPI sono "in attesa":</b> finora in PROD ci sono solo dati SIMULATI (file F-001). I KPI definitivi si accendono con le esportazioni Mexal (E-01…E-06) caricate e verificate.';
+  // classi
+  const cl = S.data.classi || [];
+  $('classiDato').innerHTML = cl.length ? '<table><tr><th>Tabella</th><th>Classe</th><th>Stato</th><th class="num">Righe</th></tr>' + cl.map(r => '<tr><td>' + esc(r.livello + '.' + r.tabella) + '</td><td>' + badgeClasse(r.classe) + '</td><td>' + esc(r.stato) + '</td><td class="num">' + fmtI(r.righe) + '</td></tr>').join('') + '</table>' : '<p class="muted">Nessuna riga caricata.</p>';
+  $('accountKv').innerHTML = '<b>Email</b><span>' + esc(st.utente) + '</span><b>Ruolo ERP</b><span>' + esc(st.ruolo) + '</span><b>Ultimo accesso</b><span>' + esc(S.data.touch ? S.data.touch.ora_rome : '—') + ' (registrato in audit)</span><b>App</b><span>' + esc(CFG.app) + '</span>';
+  renderKpi(); renderF001(); renderDq(); renderGov(); renderAudit();
+}
+function badgeClasse(c){ return c === 'REALE' ? '<span class="badge reale">● REALE</span>' : '<span class="badge simulato">◐ SIMULATO</span>'; }
+
+function renderKpi(){
+  const k = S.data.kpi || [], st = S.data.stato;
+  if (!k.length) { $('kpiReale').innerHTML = '<div class="note">Nessun dato REALE verificato: i KPI definitivi (ricavo netto, kg, prezzo medio, costo medio, margine €/kg e %, contribuzione) restano vuoti finché non vengono caricate e verificate le vendite Mexal. Nessun valore simulato viene mostrato qui, per principio.</div>'; return; }
+  const last = k[k.length - 1];
+  $('kpiReale').innerHTML = '<div class="tiles">' +
+    tile('Ricavo netto ' + last.nome_mese + ' ' + last.anno, '€ ' + fmtN(last.ricavo_netto_eur, 0), 'KPI-01', 'reale') +
+    tile('Kg venduti', fmtN(last.kg_venduti, 0), 'KPI-02', 'reale') +
+    tile('Prezzo medio', '€/kg ' + fmtN(last.prezzo_medio_eur_kg, 3), 'KPI-03 · ponderato', 'reale') +
+    tile('Margine', fmtPct(last.margine_pct), '€/kg ' + fmtN(last.margine_eur_kg, 3) + ' · KPI-05/06', 'reale') + '</div>' +
+    '<div class="chart" id="kpiChart"></div><div class="tip" id="kpiTip">Tocca una barra per il valore.</div>' +
+    '<details><summary class="small">Tabella mensile</summary><div class="tbl"><table><tr><th>Mese</th><th class="num">Ricavo €</th><th class="num">Kg</th><th class="num">€/kg</th><th class="num">Costo €/kg</th><th class="num">Margine %</th><th class="num">Contrib. €</th></tr>' +
+    k.map(r => '<tr><td>' + esc(r.nome_mese + ' ' + r.anno) + '</td><td class="num">' + fmtN(r.ricavo_netto_eur, 0) + '</td><td class="num">' + fmtN(r.kg_venduti, 0) + '</td><td class="num">' + fmtN(r.prezzo_medio_eur_kg, 3) + '</td><td class="num">' + fmtN(r.costo_medio_eur_kg, 3) + '</td><td class="num">' + fmtPct(r.margine_pct) + '</td><td class="num">' + fmtN(r.contribuzione_eur, 0) + '</td></tr>').join('') + '</table></div></details>';
+  barChart($('kpiChart'), k.map(r => ({label: r.nome_mese.slice(0,3) + ' ' + String(r.anno).slice(2), value: Number(r.ricavo_netto_eur)})), 'var(--reale)', v => '€ ' + fmtN(v, 0), $('kpiTip'), 'Ricavo netto mensile (KPI-01)');
+}
+
+function renderF001(){
+  const rows = S.data.f001 || [];
+  if (!rows.length) { $('f001Charts').innerHTML = '<p class="muted">Nessuna riga F-001 disponibile per il tuo ruolo.</p>'; $('f001Table').innerHTML = ''; return; }
+  const scen = [...new Set(rows.map(r => r.scenario))];
+  const allVals = rows.map(r => Number(r.margine_kg));
+  const dom = [Math.min(0, ...allVals), Math.max(0, ...allVals)];
+  $('f001Charts').innerHTML = scen.map((s, i) => '<div class="sect">' + esc(s) + ' <span class="badge simulato small">◐ SIMULATO</span></div><div class="chart" id="f001c' + i + '"></div><div class="tip" id="f001t' + i + '">Margine €/kg per calibro · tocca una barra</div>').join('');
+  scen.forEach((s, i) => {
+    const d = rows.filter(r => r.scenario === s).map(r => ({label: r.calibro, value: Number(r.margine_kg), extra: 'prezzo €/kg ' + fmtN(r.prezzo_kg, 3) + ' · costo ' + fmtN(r.costo_kg, 3) + ' · fusti ' + fmtI(r.fusti) + ' (REALE)'}));
+    barChart($('f001c' + i), d, 'var(--simulato)', v => '€/kg ' + fmtN(v, 3), $('f001t' + i), 'Margine €/kg · ' + s, dom);
+  });
+  $('f001Table').innerHTML = '<table><tr><th>Calibro</th><th>Scenario</th><th>Livello</th><th class="num">Fusti <span class="badge reale">●</span></th><th class="num">Costo</th><th class="num">Prezzo</th><th class="num">Margine</th><th class="num">%</th></tr>' +
+    rows.map(r => '<tr><td>' + esc(r.calibro) + '</td><td>' + esc(r.scenario) + '</td><td>' + esc(r.livello_prezzo) + '</td><td class="num">' + fmtI(r.fusti) + '</td><td class="num">' + fmtN(r.costo_kg, 3) + '</td><td class="num">' + fmtN(r.prezzo_kg, 3) + '</td><td class="num" style="color:' + (Number(r.margine_kg) < 0 ? 'var(--critical)' : 'inherit') + '">' + fmtN(r.margine_kg, 3) + '</td><td class="num">' + fmtPct(r.margine_pct) + '</td></tr>').join('') + '</table>';
+}
+
+// grafico a barre SVG (una serie; marcatori sottili; baseline; tocco = valore)
+function barChart(el, data, color, fmt, tipEl, title, domain){
+  if (!el || !data.length) return;
+  const W = 640, H = 220, padL = 46, padR = 10, padT = 14, padB = 34;
+  const vals = data.map(d => d.value);
+  const lo = domain ? domain[0] : Math.min(0, ...vals), hi = domain ? domain[1] : Math.max(0, ...vals);
+  const span = (hi - lo) || 1;
+  const y = v => padT + (hi - v) / span * (H - padT - padB);
+  const n = data.length, bw = (W - padL - padR) / n, bar = Math.min(bw * 0.7, 46);
+  const raw = span / 4, mag = Math.pow(10, Math.floor(Math.log10(raw))), nice = [1, 2, 2.5, 5, 10].map(m => m * mag).find(st => st >= raw) || mag;
+  const ticks = []; for (let t = Math.ceil(lo / nice) * nice; t <= hi + 1e-9; t += nice) ticks.push(Math.round(t * 1000) / 1000);
+  let s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(title) + '">';
+  ticks.forEach(t => { s += '<line class="axis" x1="' + padL + '" x2="' + (W - padR) + '" y1="' + y(t) + '" y2="' + y(t) + '"/><text x="' + (padL - 6) + '" y="' + (y(t) + 4) + '" text-anchor="end">' + fmt(t).replace(/^€(\/kg)? /, '') + '</text>'; });
+  s += '<line class="base" x1="' + padL + '" x2="' + (W - padR) + '" y1="' + y(0) + '" y2="' + y(0) + '"/>';
+  data.forEach((d, i) => {
+    const x = padL + i * bw + (bw - bar) / 2, y0 = y(0), y1 = y(d.value), top = Math.min(y0, y1), h = Math.max(2, Math.abs(y1 - y0));
+    s += '<rect class="bar" data-i="' + i + '" x="' + x + '" y="' + top + '" width="' + bar + '" height="' + h + '" rx="3" fill="' + color + '"><title>' + esc(d.label + ': ' + fmt(d.value)) + '</title></rect>';
+    const parts = String(d.label).length > 7 && /\s/.test(d.label) ? String(d.label).split(/\s+/, 2) : [String(d.label).slice(0, 9)];
+    s += '<text class="lbl" x="' + (x + bar/2) + '" y="' + (H - padB + 13) + '" text-anchor="middle">' + parts.map((t, j) => '<tspan x="' + (x + bar/2) + '" dy="' + (j ? 11 : 0) + '">' + esc(t.slice(0, 9)) + '</tspan>').join('') + '</text>';
+  });
+  s += '</svg>';
+  el.innerHTML = s;
+  el.querySelectorAll('rect.bar').forEach(r => { const show = () => { const d = data[+r.dataset.i]; if (tipEl) tipEl.textContent = d.label + ': ' + fmt(d.value) + (d.extra ? ' · ' + d.extra : ''); }; r.addEventListener('click', show); r.addEventListener('mouseenter', show); });
+}
+
+function sevClass(status, sev){ if (status === 'VIOLAZIONE') return sev === 'BLOCCANTE' ? 'critical' : 'serious'; if (status === 'ERRORE') return 'critical'; if (status === 'OK') return 'good'; return 'neutral'; }
+function sevIcon(status){ return {VIOLAZIONE:'✖', ERRORE:'⚠', OK:'✓', INFO:'ℹ', DOCUMENTALE:'▭'}[status] || '•'; }
+function renderDq(){
+  const d = (S.data.dq || []).slice().sort((a, b) => { const o = {VIOLAZIONE:0, ERRORE:1, INFO:2, OK:3, DOCUMENTALE:4}; return (o[a.status] ?? 9) - (o[b.status] ?? 9) || a.rule_code.localeCompare(b.rule_code); });
+  const nv = d.filter(x => x.status === 'VIOLAZIONE').length;
+  $('dqSummary').textContent = nv + ' violazioni · ' + d.filter(x => x.status === 'OK').length + ' OK · ' + d.length + ' regole eseguite';
+  $('dqList').innerHTML = d.length ? d.map(r => '<div class="it"><div class="t"><span class="badge ' + sevClass(r.status, r.severity) + '">' + sevIcon(r.status) + ' ' + esc(r.status) + (r.violations !== null && r.violations !== undefined ? ' · ' + fmtI(r.violations) : '') + '</span> ' + esc(r.rule_code) + ' · ' + esc(r.rule_name) + '</div><div class="d">' + esc(r.dq_dimension) + ' · ' + esc(r.severity) + ' · ' + esc(r.target_table) + ' · ' + esc(r.eseguito_il_rome) + (r.atteso_note ? ' · <i>' + esc(r.atteso_note) + '</i>' : '') + '</div></div>').join('') : '<p class="muted">Nessun esito disponibile.</p>';
+}
+function renderGov(){
+  const g = S.data.gov || [], m = S.data.man || [], k = S.data.kpid || [];
+  $('govSummary').textContent = g.filter(x => x.stato === 'RATIFICATA').length + '/' + g.length + ' ratificati';
+  $('govList').innerHTML = g.map(r => '<div class="it"><div class="t">' + esc(r.modulo) + ' <span class="badge ' + (r.stato === 'RATIFICATA' ? 'good' : 'warn') + '">' + esc(r.stato) + '</span> <span class="muted small">' + esc(r.fase) + '</span></div><div class="kv small" style="margin-top:4px"><b>Owner</b><span>' + esc(r.data_owner) + '</span><b>Steward</b><span>' + esc(r.data_steward) + '</span><b>Processo</b><span>' + esc(r.resp_processo) + '</span><b>Approva</b><span>' + esc(r.resp_approvazione) + '</span>' + (r.note ? '<b>Note</b><span>' + esc(r.note) + '</span>' : '') + '</div></div>').join('') || '<p class="muted">Nessun modulo.</p>';
+  $('manifestList').innerHTML = m.map(r => '<div class="it"><div class="t">' + esc(r.source_code) + ' · ' + esc(r.file_name) + ' ' + badgeClasse(r.data_class_default) + '</div><div class="d">' + esc(r.source_system) + ' · ' + esc(r.delivered_by) + ' · ricevuto ' + esc(r.ricevuto_il_rome) + ' · ' + fmtI(r.row_count) + ' righe · ' + fmtI(r.file_bytes) + ' byte · stato <b>' + esc(r.stato_verifica) + '</b><br><span class="small">SHA-256 ' + esc(String(r.file_sha256).slice(0, 16)) + '…</span>' + (r.origin_note ? '<br><i>' + esc(r.origin_note) + '</i>' : '') + '</div></div>').join('') || '<p class="muted">Nessun file nel manifest.</p>';
+  $('kpiDictSummary').textContent = k.filter(x => x.approved_by).length + '/' + k.length + ' approvati';
+  $('kpiDictList').innerHTML = k.map(r => '<div class="it"><div class="t">' + esc(r.kpi_code) + ' · ' + esc(r.kpi_name) + ' <span class="badge ' + (r.approved_by ? 'good' : 'warn') + '">' + (r.approved_by ? '✓ approvato' : '⏳ da approvare') + '</span></div><div class="d"><code>' + esc(r.formula_text) + '</code><br>' + esc(r.grain) + ' · ' + esc(r.unit) + ' · ' + esc(r.owner_role) + (r.note ? ' · <i>' + esc(r.note) + '</i>' : '') + '</div></div>').join('');
+}
+function renderAudit(){
+  const a = S.data.audit || [];
+  $('auditTable').innerHTML = a.length ? '<table><tr><th>Quando</th><th>Azione</th><th>Chi</th><th>Oggetto</th></tr>' + a.map(r => '<tr><td class="num">' + esc(r.quando_rome) + '</td><td>' + esc(r.action) + '</td><td>' + esc(r.actor_app) + '</td><td>' + esc((r.object_schema || '') + (r.object_name ? '.' + r.object_name : '')) + (r.details && r.details.version ? ' v' + esc(r.details.version) : '') + '</td></tr>').join('') + '</table>' : '<p class="muted">Nessuna azione visibile per il tuo ruolo.</p>';
+}
+
+// ---------- PWA ----------
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; $('installHint').innerHTML = '<button type="button" id="btnInstall" style="margin-top:6px">Installa sul telefono</button>'; $('btnInstall').onclick = async () => { deferredInstall.prompt(); deferredInstall = null; $('installHint').textContent = ''; }; });
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
+
+// ---------- avvio ----------
+loadSession();
+if (S.session) { enter().catch(e => showLogin(explain(e), true)); } else { showLogin(''); }
+</script>
+</body>
+</html>
