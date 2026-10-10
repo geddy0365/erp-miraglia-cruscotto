@@ -4,65 +4,61 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#1b3a2a">
-<meta name="description" content="Cruscotto ERP Miraglia S.r.l.: stato del sistema, KPI definitivi (REALE, verde), scenari SIMULATI (rosa), qualità dati, governance, audit.">
-<title>Cruscotto ERP Miraglia</title>
+<meta name="theme-color" content="#2e5e4e">
+<meta name="description" content="ERP Miraglia S.r.l. dal telefono: cruscotto (KPI REALI in verde, SIMULATI in rosa), anagrafiche, listini con approvazione, import, audit.">
+<title>ERP Miraglia</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
   color-scheme:light;
-  --bg:#f4f3ee;--surface:#ffffff;--surface-2:#f0efe9;--line:#d9d7cf;
-  --ink:#141414;--ink-2:#4a4944;--ink-3:#77766f;
+  --bg:#eef4f7;--surface:#ffffff;--surface-2:#f2f7f4;--line:#d5dfe3;
+  --ink:#172126;--ink-2:#45545b;--ink-3:#73848c;
   --reale:#1e7e34;--reale-bg:#e3f2e6;--simulato:#c2185b;--simulato-bg:#fbe4ec;
-  --attivo:#c62828;--attivo-ink:#ffffff;--disattivo:#f9a825;--disattivo-ink:#141414;
-  --good:#1e7e34;--warn:#b26a00;--serious:#c2185b;--critical:#8e0000;--neutral:#5b5a55;
-  --accent:#1b3a2a;--radius:14px;--gap:12px;
+  --attivo:#d63d2e;--attivo-ink:#ffffff;--disattivo:#f2b705;--disattivo-ink:#1b1b1b;
+  --good:#1e7e34;--warn:#b26a00;--serious:#c2185b;--critical:#9e1b1b;--neutral:#5b6a70;
+  --accent:#2e5e4e;--accent-2:#1f6f8b;--chip:#dcebf3;--chip-ink:#164b63;--radius:14px;--gap:12px;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#121311;--surface:#1c1e1b;--surface-2:#24272323;--surface-2:#242723;--line:#3a3d38;
-    --ink:#f2f1ec;--ink-2:#c9c8c0;--ink-3:#9a998f;
+    --bg:#101417;--surface:#191f23;--surface-2:#20282d;--line:#35414a;
+    --ink:#eef2f4;--ink-2:#c3ccd1;--ink-3:#8f9ca3;
     --reale:#43a047;--reale-bg:#1b2f1f;--simulato:#d81b60;--simulato-bg:#3a1a27;
-    --attivo:#d32f2f;--attivo-ink:#ffffff;--disattivo:#f9a825;--disattivo-ink:#141414;
-    --good:#43a047;--warn:#ffb74d;--serious:#ec407a;--critical:#ef5350;--neutral:#a3a29a;
-    --accent:#9bd3b0;
+    --attivo:#e0473a;--attivo-ink:#ffffff;--disattivo:#f2b705;--disattivo-ink:#1b1b1b;
+    --good:#43a047;--warn:#ffb74d;--serious:#ec407a;--critical:#ef5350;--neutral:#a3aeb4;
+    --accent:#214a3e;--accent-2:#2a7f9c;--chip:#1e3a47;--chip-ink:#bfe3f2;
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#121311;--surface:#1c1e1b;--surface-2:#242723;--line:#3a3d38;
-  --ink:#f2f1ec;--ink-2:#c9c8c0;--ink-3:#9a998f;
+  --bg:#101417;--surface:#191f23;--surface-2:#20282d;--line:#35414a;
+  --ink:#eef2f4;--ink-2:#c3ccd1;--ink-3:#8f9ca3;
   --reale:#43a047;--reale-bg:#1b2f1f;--simulato:#d81b60;--simulato-bg:#3a1a27;
-  --attivo:#d32f2f;--attivo-ink:#ffffff;--disattivo:#f9a825;--disattivo-ink:#141414;
-  --good:#43a047;--warn:#ffb74d;--serious:#ec407a;--critical:#ef5350;--neutral:#a3a29a;
-  --accent:#9bd3b0;
+  --attivo:#e0473a;--attivo-ink:#ffffff;--disattivo:#f2b705;--disattivo-ink:#1b1b1b;
+  --good:#43a047;--warn:#ffb74d;--serious:#ec407a;--critical:#ef5350;--neutral:#a3aeb4;
+  --accent:#214a3e;--accent-2:#2a7f9c;--chip:#1e3a47;--chip-ink:#bfe3f2;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
-body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
-header{position:sticky;top:0;z-index:5;background:var(--accent);color:#fff;padding:10px 16px calc(10px);display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:5;background:linear-gradient(100deg,var(--accent),var(--accent-2));color:#fff;padding:10px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 header h1{font-size:17px;margin:0;flex:1;line-height:1.2}
-header h1 small{display:block;font-size:12px;font-weight:400;opacity:.85}
-.ver{font-size:12px;background:rgba(255,255,255,.18);padding:3px 8px;border-radius:999px;white-space:nowrap}
-main{padding:12px 16px;max-width:760px;margin:0 auto}
+header h1 small{display:block;font-size:12px;font-weight:400;opacity:.9}
+.ver{font-size:12px;background:rgba(255,255,255,.2);padding:3px 8px;border-radius:999px;white-space:nowrap}
+main{padding:12px 16px;max-width:820px;margin:0 auto}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:var(--gap)}
 .card h2{font-size:15px;margin:0 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .card h2 .badge{margin-left:auto}
-.card.reale{border-color:var(--reale);background:linear-gradient(0deg,var(--surface),var(--surface)),var(--surface)}
-.card.reale h2{color:var(--reale)}
-.card.simulato{border-color:var(--simulato)}
-.card.simulato h2{color:var(--simulato)}
+.card.reale{border-color:var(--reale)}.card.reale h2{color:var(--reale)}
+.card.simulato{border-color:var(--simulato)}.card.simulato h2{color:var(--simulato)}
 .badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid transparent;white-space:nowrap}
 .badge.reale{color:var(--reale);background:var(--reale-bg);border-color:var(--reale)}
 .badge.simulato{color:var(--simulato);background:var(--simulato-bg);border-color:var(--simulato)}
-.badge.good{color:var(--good);border-color:var(--good)}
-.badge.warn{color:var(--warn);border-color:var(--warn)}
-.badge.serious{color:var(--serious);border-color:var(--serious)}
-.badge.critical{color:var(--critical);border-color:var(--critical)}
-.badge.neutral{color:var(--neutral);border-color:var(--neutral)}
+.badge.good{color:var(--good);border-color:var(--good)}.badge.warn{color:var(--warn);border-color:var(--warn)}
+.badge.serious{color:var(--serious);border-color:var(--serious)}.badge.critical{color:var(--critical);border-color:var(--critical)}
+.badge.neutral{color:var(--neutral);border-color:var(--neutral)}.badge.info{color:var(--chip-ink);background:var(--chip);border-color:var(--chip)}
 .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .tile{background:var(--surface-2);border-radius:10px;padding:10px 12px;min-height:64px}
 .tile .k{font-size:12px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em}
@@ -75,14 +71,21 @@ button,.btn{appearance:none;border:0;border-radius:10px;padding:10px 14px;font:i
 button:disabled,button.off,.btn.off{background:var(--disattivo);color:var(--disattivo-ink)}
 button:disabled{cursor:not-allowed}
 button.sm{padding:8px 12px;min-height:40px;font-size:14px}
-button.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);padding:6px 10px;min-height:36px;font-weight:600;font-size:13px}
+button.xs{padding:4px 9px;min-height:30px;font-size:12px;border-radius:8px}
+button.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.55);padding:6px 10px;min-height:36px;font-weight:600;font-size:13px}
+button.sec{background:var(--chip);color:var(--chip-ink)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-input{font:inherit;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);width:100%;min-height:48px}
+input,select,textarea{font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);width:100%;min-height:46px}
+textarea{min-height:64px}
 label{font-size:13px;color:var(--ink-2);display:block;margin:8px 0 4px}
+label.req::after{content:" *";color:var(--critical)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line);z-index:5}
-nav.tabs button{flex:1;padding:8px 2px;min-height:48px;font-size:12px;line-height:1.1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:10px}
+nav.tabs button{flex:1;padding:8px 2px;min-height:50px;font-size:12px;line-height:1.1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:10px}
 nav.tabs button span.ic{font-size:17px}
-.msg{padding:10px 12px;border-radius:10px;margin:10px 0;font-size:14px;border:1px solid var(--line);background:var(--surface-2)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;-webkit-overflow-scrolling:touch}
+.chips button{flex:0 0 auto;min-height:36px;padding:6px 12px;font-size:13px;border-radius:999px}
+.msg{padding:10px 12px;border-radius:10px;margin:10px 0;font-size:14px;border:1px solid var(--line);background:var(--surface-2);white-space:pre-wrap}
 .msg.err{border-color:var(--critical);color:var(--critical)}
 .msg.ok{border-color:var(--good)}
 table{width:100%;border-collapse:collapse;font-size:13px}
@@ -90,9 +93,9 @@ th,td{text-align:left;padding:7px 6px;border-bottom:1px solid var(--line);vertic
 th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-3);font-weight:600}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .tbl{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.list .it{padding:9px 0;border-bottom:1px solid var(--line)}
+.list .it{padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .list .it:last-child{border-bottom:0}
-.it .t{font-weight:600;font-size:14px}
+.it .t{font-weight:600;font-size:14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .it .d{font-size:13px;color:var(--ink-2)}
 .chart{margin:8px 0 2px}
 .chart svg{width:100%;height:auto;display:block;touch-action:manipulation}
@@ -109,17 +112,22 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 .kv b{color:var(--ink-2);font-weight:600}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--ink-2);border-radius:50%;animation:sp 1s linear infinite;vertical-align:middle}
 @keyframes sp{to{transform:rotate(360deg)}}
+.riga{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:8px 0;background:var(--surface-2)}
+.riga .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 8px}
+.stato{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}
+.stato.BOZZA{background:#fff3cd;color:#6b4e00}.stato.IN_APPROVAZIONE{background:#dcebf3;color:#164b63}.stato.APPROVATO{background:var(--reale-bg);color:var(--reale)}
+.stato.SCADUTO{background:#e9e9e9;color:#555}.stato.ANNULLATO{background:#f8d7da;color:#842029}
 @media (min-width:600px){.tiles{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
 <header>
-  <h1>Cruscotto ERP Miraglia<small id="hdrSub">Dashboard CEO · PROD</small></h1>
+  <h1>ERP Miraglia<small id="hdrSub">PROD</small></h1>
   <span class="ver" id="verBadge">v—</span>
   <button class="ghost" id="btnTheme" title="Tema chiaro/scuro">Tema</button>
 </header>
 <main id="main">
-  <noscript><div class="card">Il Cruscotto richiede JavaScript.</div></noscript>
+  <noscript><div class="card">L'ERP richiede JavaScript.</div></noscript>
   <!-- LOGIN -->
   <section id="viewLogin" class="card">
     <h2>Accesso</h2>
@@ -140,27 +148,88 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 
   <!-- APP -->
   <section id="viewApp" class="hidden">
-    <div class="row" style="margin-bottom:10px;flex-wrap:nowrap">
+    <div class="row" style="margin-bottom:8px;flex-wrap:nowrap">
       <span class="muted small" id="whoami" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
       <button id="btnRefresh" class="sm">Aggiorna</button>
       <button id="btnLogout" class="sm">Esci</button>
     </div>
     <div id="appMsg"></div>
 
-    <div id="tabStato">
-      <div class="card">
-        <h2>Stato del sistema <span class="badge neutral" id="oraServer"></span></h2>
-        <div class="tiles" id="tilesStato"></div>
-        <div class="note" id="noteStato"></div>
+    <!-- CRUSCOTTO -->
+    <div id="tabCruscotto">
+      <div class="chips" id="chipsCruscotto">
+        <button data-sub="Stato">Stato</button><button data-sub="Kpi" class="off">KPI</button><button data-sub="Dq" class="off">Qualità</button><button data-sub="Gov" class="off">Governance</button><button data-sub="Audit" class="off">Audit</button>
+      </div>
+      <div id="subStato">
+        <div class="card">
+          <h2>Stato del sistema <span class="badge neutral" id="oraServer"></span></h2>
+          <div class="tiles" id="tilesStato"></div>
+          <div class="note" id="noteStato"></div>
+        </div>
+        <div class="card">
+          <h2>Classi di dato <span class="badge reale">● REALE</span> <span class="badge simulato">◐ SIMULATO</span></h2>
+          <div class="tbl" id="classiDato"></div>
+          <p class="muted small">Principi 4-6 del Project: i dati simulati sono marcati, in rosa e separati; nessun KPI definitivo li usa.</p>
+        </div>
+      </div>
+      <div id="subKpi" class="hidden">
+        <div class="card reale"><h2>KPI definitivi <span class="badge reale">● REALE · verificato</span></h2><div id="kpiReale"></div></div>
+        <div class="card reale"><h2>Listini approvati <span class="badge reale">● REALE</span></h2><div id="kpiListini"></div></div>
+        <div class="card simulato">
+          <h2>Scenari F-001 <span class="badge simulato">◐ SIMULATO</span></h2>
+          <p class="muted small">Anteprima del file Copilot F-001 (24 righe RAW): prezzi, costi e margini sono ipotesi (rosa); i <b>fusti</b> sono dichiarati REALI ma non ancora certificati (DEC-01). Non è un KPI.</p>
+          <div id="f001Charts"></div>
+          <details><summary class="small">Tabella completa</summary><div class="tbl" id="f001Table"></div></details>
+        </div>
+      </div>
+      <div id="subDq" class="hidden"><div class="card"><h2>Qualità dei dati <span class="badge neutral" id="dqSummary"></span></h2><div class="list" id="dqList"></div></div></div>
+      <div id="subGov" class="hidden">
+        <div class="card"><h2>Governance per modulo <span class="badge neutral" id="govSummary"></span></h2><div class="list" id="govList"></div></div>
+        <div class="card"><h2>File ricevuti (manifest)</h2><div class="list" id="manifestList"></div></div>
+        <div class="card"><h2>Dizionario KPI <span class="badge neutral" id="kpiDictSummary"></span></h2><div class="list" id="kpiDictList"></div></div>
+      </div>
+      <div id="subAudit" class="hidden"><div class="card"><h2>Ultime azioni registrate</h2><div class="tbl" id="auditTable"></div></div></div>
+    </div>
+
+    <!-- ANAGRAFICHE -->
+    <div id="tabAnagrafiche" class="hidden">
+      <div class="chips" id="chipsAna">
+        <button data-sub="articoli">Articoli</button><button data-sub="clienti" class="off">Clienti</button><button data-sub="fornitori" class="off">Fornitori</button>
       </div>
       <div class="card">
-        <h2>Classi di dato <span class="badge reale">● REALE</span> <span class="badge simulato">◐ SIMULATO</span></h2>
-        <div class="tbl" id="classiDato"></div>
-        <p class="muted small">Principi 4-6 del Project: i dati simulati sono marcati, in rosa e separati; nessun KPI definitivo li usa.</p>
+        <div class="row" style="flex-wrap:nowrap"><input id="anaSearch" type="search" placeholder="Cerca per codice o nome…" style="flex:1"><button class="sm" id="btnAnaNew">+ Nuovo</button></div>
+        <div class="muted small" id="anaCount" style="margin-top:6px"></div>
+        <div class="list" id="anaList"></div>
       </div>
+      <div class="card hidden" id="anaFormCard"><h2 id="anaFormTitle">Scheda</h2><form id="anaForm"></form><div id="anaMsg"></div></div>
+    </div>
+
+    <!-- LISTINI -->
+    <div id="tabListini" class="hidden">
+      <div class="card">
+        <div class="row" style="flex-wrap:nowrap"><select id="lstFiltro" style="flex:1"><option value="">Tutti gli stati</option><option>BOZZA</option><option>IN_APPROVAZIONE</option><option>APPROVATO</option><option>SCADUTO</option><option>ANNULLATO</option></select><button class="sm" id="btnLstNew">+ Nuovo listino</button></div>
+        <div class="muted small" id="lstCount" style="margin-top:6px"></div>
+        <div class="list" id="lstList"></div>
+      </div>
+      <div class="card hidden" id="lstDetail"></div>
+      <div class="card hidden" id="lstFormCard"><h2 id="lstFormTitle">Listino</h2><form id="lstForm"></form><div id="lstMsg"></div></div>
+    </div>
+
+    <!-- ALTRO -->
+    <div id="tabAltro" class="hidden">
+      <div class="card">
+        <h2>Import dal modello M-01 (Excel)</h2>
+        <p class="muted small">Carica il file compilato: fogli ARTICOLI, CLIENTI e LISTINI (i listini nascono in BOZZA, da approvare qui). Tutto o niente: se una riga è sbagliata, nulla viene scritto e vedi l'elenco degli errori. COSTI_OLIVE, COSTI_LAVORAZIONE e FUSTI arrivano con la v0.4.0.</p>
+        <input type="file" id="impFile" accept=".xlsx">
+        <div id="impPreview" style="margin-top:8px"></div>
+        <div class="row" style="margin-top:8px"><button id="btnImport" disabled>Carica nel database</button></div>
+        <div id="impMsg"></div>
+      </div>
+      <div class="card"><h2>Storico modifiche (ultime 300)</h2><div class="tbl" id="storicoTable"></div></div>
       <div class="card">
         <h2>Account</h2>
         <div class="kv" id="accountKv"></div>
+        <div class="tbl" id="permTable" style="margin-top:8px"></div>
         <details style="margin-top:10px"><summary class="small">Cambia password</summary>
           <form id="formPwd"><label for="newPwd">Nuova password (min. 10 caratteri)</label><input id="newPwd" type="password" autocomplete="new-password" minlength="10" required>
           <div class="row" style="margin-top:8px"><button type="submit">Salva password</button></div></form>
@@ -169,45 +238,14 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
         <div class="row" style="margin-top:12px"><button id="btnReset2">AZZERA (cancella sessione e cache, ricomincia)</button></div>
       </div>
     </div>
-
-    <div id="tabKpi" class="hidden">
-      <div class="card reale">
-        <h2>KPI definitivi <span class="badge reale">● REALE · verificato</span></h2>
-        <div id="kpiReale"></div>
-      </div>
-      <div class="card simulato">
-        <h2>Scenari F-001 <span class="badge simulato">◐ SIMULATO</span></h2>
-        <p class="muted small">Anteprima del file Copilot F-001 (24 righe RAW): prezzi, costi e margini sono ipotesi (rosa); i <b>fusti</b> sono dichiarati REALI ma non ancora certificati (DEC-01). Non è un KPI.</p>
-        <div id="f001Charts"></div>
-        <details><summary class="small">Tabella completa</summary><div class="tbl" id="f001Table"></div></details>
-      </div>
-    </div>
-
-    <div id="tabDq" class="hidden">
-      <div class="card">
-        <h2>Qualità dei dati <span class="badge neutral" id="dqSummary"></span></h2>
-        <div class="list" id="dqList"></div>
-      </div>
-    </div>
-
-    <div id="tabGov" class="hidden">
-      <div class="card"><h2>Governance per modulo <span class="badge neutral" id="govSummary"></span></h2><div class="list" id="govList"></div></div>
-      <div class="card"><h2>File ricevuti (manifest)</h2><div class="list" id="manifestList"></div></div>
-      <div class="card"><h2>Dizionario KPI <span class="badge neutral" id="kpiDictSummary"></span></h2><div class="list" id="kpiDictList"></div></div>
-    </div>
-
-    <div id="tabAudit" class="hidden">
-      <div class="card"><h2>Ultime azioni registrate</h2><div class="tbl" id="auditTable"></div></div>
-    </div>
   </section>
 </main>
 
 <nav class="tabs hidden" id="tabs">
-  <button data-tab="Stato"><span class="ic">▣</span>Stato</button>
-  <button data-tab="Kpi" class="off"><span class="ic">€</span>KPI</button>
-  <button data-tab="Dq" class="off"><span class="ic">✓</span>Qualità</button>
-  <button data-tab="Gov" class="off"><span class="ic">☷</span>Governance</button>
-  <button data-tab="Audit" class="off"><span class="ic">≡</span>Audit</button>
+  <button data-tab="Cruscotto"><span class="ic">▣</span>Cruscotto</button>
+  <button data-tab="Anagrafiche" class="off"><span class="ic">☷</span>Anagrafiche</button>
+  <button data-tab="Listini" class="off"><span class="ic">€</span>Listini</button>
+  <button data-tab="Altro" class="off"><span class="ic">≡</span>Altro</button>
 </nav>
 
 <script>
@@ -215,20 +253,24 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 const CFG = {
   url: 'https://sqzxjuvxrtifhagjqjqq.supabase.co',
   key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxenhqdXZ4cnRpZmhhZ2pxanFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MjkzMjYsImV4cCI6MjEwNzEwNTMyNn0.uy1gZj0fcRb37QpzcPi2S99ZroAdOq2BmutF82E20A0',
-  schema: 'api', app: 'cruscotto 0.2.0'
+  schema: 'api', app: 'erp 0.3.0'
 };
 const LS = 'erp_cruscotto_session';
-const S = { session: null, data: {}, tab: 'Stato' };
+const S = { session: null, data: {}, perms: {}, dict: {calibri: [], canali: [], um: []}, lists: {articoli: [], clienti: [], fornitori: [], listini: []},
+            tab: 'Cruscotto', sub: {Cruscotto: 'Stato', Anagrafiche: 'articoli'}, editing: null, lstEditing: null, imp: null };
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtN = (v, d=2) => (v === null || v === undefined || v === '' || isNaN(v)) ? '—' : Number(v).toLocaleString('it-IT', {minimumFractionDigits:d, maximumFractionDigits:d});
 const fmtI = (v) => (v === null || v === undefined) ? '—' : Number(v).toLocaleString('it-IT');
 const fmtPct = (v) => (v === null || v === undefined || isNaN(v)) ? '—' : (Number(v)*100).toLocaleString('it-IT', {minimumFractionDigits:1, maximumFractionDigits:1}) + '%';
+const fmtD = (d) => d ? String(d).slice(0, 10).split('-').reverse().join('/') : '—';
+const CONFEZIONI = ['FUSTO', 'SECCHIO 3,5 KG', 'SECCHIO 5 KG', 'CF 1 KG', 'VASO', 'BUSTA', 'SFUSO', 'ALTRO'];
+const TIPI_FORN = ['OLIVE', 'MATERIALI', 'SERVIZI', 'TRASPORTI', 'ALTRO'];
 
-// ---------- tema ----------
-(function(){ try { const t = localStorage.getItem('erp_theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch(e){} })();
+// ---------- tema (chiaro di default; il pulsante alterna) ----------
+(function(){ try { const t = localStorage.getItem('erp_theme') || 'light'; document.documentElement.setAttribute('data-theme', t); } catch(e){ document.documentElement.setAttribute('data-theme', 'light'); } })();
 $('btnTheme').onclick = () => {
-  const cur = document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
   const next = cur === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   try { localStorage.setItem('erp_theme', next); } catch(e){}
@@ -278,30 +320,41 @@ async function api(path, opts={}, retry=true){
   return j;
 }
 const view = (name, q='select=*') => api(name + '?' + q);
+const rpc = (fn, args) => api('rpc/' + fn, {method: 'POST', body: args || {}});
 function explain(e){
   if (!e) return 'Errore sconosciuto';
   if (e.code === 'PGRST106' || /schema must be one of/i.test(e.message || '')) return 'Lo schema "api" non è esposto all\'API REST: nel pannello Supabase → Project Settings → Data API → "Exposed schemas" aggiungi "api" e salva. Poi premi Aggiorna.';
   if (e.status === 401) return 'Sessione scaduta o non valida: esci e rientra.';
+  if (e.code === '42501') return 'Permesso negato: ' + (e.message || '');
+  if (e.status === 404 && /rpc|function/i.test(e.message || '')) return 'Funzione non trovata: il database è alla versione precedente (serve la v0.3.0).';
   if (e.status === 403 || e.status === 404) return 'Accesso negato (' + e.status + '): ' + (e.message || '');
   if (/Failed to fetch|NetworkError|Load failed/i.test(e.message || '')) return 'Rete non raggiungibile. Controlla la connessione e premi Aggiorna.';
   return e.message || String(e);
 }
 
-// ---------- UI ----------
+// ---------- UI base ----------
 function showLogin(msg, isErr){
   $('viewLogin').classList.remove('hidden'); $('viewApp').classList.add('hidden'); $('tabs').classList.add('hidden');
   $('loginMsg').innerHTML = msg ? '<div class="msg ' + (isErr ? 'err' : '') + '">' + esc(msg) + '</div>' : '';
-  $('hdrSub').textContent = 'Dashboard CEO · PROD';
+  $('hdrSub').textContent = 'PROD';
 }
 function showApp(){ $('viewLogin').classList.add('hidden'); $('viewApp').classList.remove('hidden'); $('tabs').classList.remove('hidden'); setTab(S.tab); }
 function setTab(t){
   S.tab = t;
-  ['Stato','Kpi','Dq','Gov','Audit'].forEach(x => { $('tab' + x).classList.toggle('hidden', x !== t); });
+  ['Cruscotto','Anagrafiche','Listini','Altro'].forEach(x => $('tab' + x).classList.toggle('hidden', x !== t));
   document.querySelectorAll('nav.tabs button').forEach(b => b.classList.toggle('off', b.dataset.tab !== t));
   window.scrollTo(0, 0);
 }
+function setSub(group, s){
+  S.sub[group] = s;
+  if (group === 'Cruscotto') { ['Stato','Kpi','Dq','Gov','Audit'].forEach(x => $('sub' + x).classList.toggle('hidden', x !== s)); document.querySelectorAll('#chipsCruscotto button').forEach(b => b.classList.toggle('off', b.dataset.sub !== s)); }
+  if (group === 'Anagrafiche') { document.querySelectorAll('#chipsAna button').forEach(b => b.classList.toggle('off', b.dataset.sub !== s)); anaCloseForm(); renderAna(); }
+}
 document.querySelectorAll('nav.tabs button').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+document.querySelectorAll('#chipsCruscotto button').forEach(b => b.onclick = () => setSub('Cruscotto', b.dataset.sub));
+document.querySelectorAll('#chipsAna button').forEach(b => b.onclick = () => setSub('Anagrafiche', b.dataset.sub));
 function msg(id, text, cls){ $(id).innerHTML = text ? '<div class="msg ' + (cls||'') + '">' + text + '</div>' : ''; }
+const can = (m, a) => !!(S.perms[m] && S.perms[m][a]);
 
 $('formLogin').onsubmit = async (ev) => {
   ev.preventDefault(); const b = $('btnLogin'); b.disabled = true; b.textContent = 'Accesso…';
@@ -313,7 +366,7 @@ $('btnLogout').onclick = logout;
 $('btnRefresh').onclick = () => refreshAll();
 $('formPwd').onsubmit = async (ev) => { ev.preventDefault(); try { await changePassword($('newPwd').value); $('newPwd').value=''; msg('pwdMsg', 'Password aggiornata.', 'ok'); } catch(e){ msg('pwdMsg', esc(explain(e)), 'err'); } };
 async function hardReset(){
-  if (!confirm('Azzerare il Cruscotto? Verranno cancellati sessione, tema e cache locale. Nessun dato del server viene toccato.')) return;
+  if (!confirm('Azzerare l\'app? Verranno cancellati sessione, tema e cache locale. Nessun dato del server viene toccato.')) return;
   try { localStorage.clear(); sessionStorage.clear(); } catch(e){}
   try { if ('caches' in window) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } } catch(e){}
   try { if (navigator.serviceWorker) { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); } } catch(e){}
@@ -321,71 +374,85 @@ async function hardReset(){
 }
 $('btnReset1').onclick = hardReset; $('btnReset2').onclick = hardReset;
 
-async function enter(){
-  showApp(); $('whoami').textContent = S.session.email || ''; await refreshAll();
-}
+async function enter(){ showApp(); $('whoami').textContent = S.session.email || ''; await refreshAll(); }
 async function refreshAll(){
   const b = $('btnRefresh'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Aggiorno';
   msg('appMsg', '');
   try {
     let touch = null;
-    try { touch = await api('rpc/fn_touch', {method:'POST', body:{p_client: CFG.app + ' · ' + navigator.userAgent.slice(0, 120)}}); } catch(e) { if (e.code === 'PGRST106' || /schema must be one of/i.test(e.message||'')) throw e; }
+    try { touch = await rpc('fn_touch', {p_client: CFG.app + ' · ' + navigator.userAgent.slice(0, 120)}); } catch(e) { if (e.code === 'PGRST106' || /schema must be one of/i.test(e.message||'')) throw e; }
     const stato = await view('v_stato_sistema');
     if (!stato || !stato.length) {
-      msg('appMsg', '<b>Utente non autorizzato.</b> L\'indirizzo <code>' + esc(S.session.email) + '</code> è autenticato ma non è presente (o non è attivo) nell\'elenco <code>sec.app_users</code>: serve una migrazione per aggiungerlo. Il tentativo è stato registrato nell\'audit.', 'err');
+      msg('appMsg', '<b>Utente non autorizzato.</b> L\'indirizzo <code>' + esc(S.session.email) + '</code> è autenticato ma non è presente (o non è attivo) nell\'elenco <code>sec.app_users</code>. Il tentativo è stato registrato nell\'audit.', 'err');
       renderEmpty(); return;
     }
     S.data.stato = stato[0];
-    const [gov, dq, man, classi, kpid, f001, kpi, audit] = await Promise.all([
+    const [gov, dq, man, classi, kpid, f001, kpi, audit, perms, calibri, canali, um, articoli, clienti, fornitori, listini, prezzi, storico] = await Promise.all([
       view('v_governance_moduli'), view('v_dq_ultimo_esito'), view('v_manifest'), view('v_classi_dato'), view('v_kpi_dizionario'),
-      view('v_scenari_f001', 'select=*&order=riga_file'), view('v_kpi_mensili', 'select=*&order=anno,mese'), view('v_audit_recente')
+      view('v_scenari_f001', 'select=*&order=riga_file'), view('v_kpi_mensili', 'select=*&order=anno,mese'), view('v_audit_recente'),
+      view('v_permessi'), view('v_calibri', 'select=*&order=sort_order'), view('v_canali', 'select=*&order=codice'), view('v_unita_misura', 'select=*&order=codice'),
+      view('v_articoli', 'select=*&order=codice'), view('v_clienti', 'select=*&order=ragione_sociale'), view('v_fornitori', 'select=*&order=ragione_sociale'),
+      view('v_listini', 'select=*&order=codice_listino,versione.desc'), view('v_prezzi_correnti', 'select=*&order=codice_listino,codice_articolo'), view('v_storico_ops')
     ]);
-    Object.assign(S.data, {gov, dq, man, classi, kpid, f001, kpi, audit, touch});
+    Object.assign(S.data, {gov, dq, man, classi, kpid, f001, kpi, audit, touch, prezzi, storico});
+    S.perms = {}; (perms || []).forEach(p => S.perms[p.modulo] = {LEGGI: p.can_read, SCRIVI: p.can_write, APPROVA: p.can_approve});
+    S.dict = {calibri: calibri || [], canali: canali || [], um: um || []};
+    S.lists = {articoli: articoli || [], clienti: clienti || [], fornitori: fornitori || [], listini: listini || []};
     renderAll();
   } catch(e) { msg('appMsg', '<b>Errore:</b> ' + esc(explain(e)), 'err'); }
   finally { b.disabled = false; b.textContent = 'Aggiorna'; }
 }
-function renderEmpty(){ ['tilesStato','classiDato','accountKv','kpiReale','f001Charts','f001Table','dqList','govList','manifestList','kpiDictList','auditTable'].forEach(id => $(id).innerHTML = ''); }
+function renderEmpty(){ ['tilesStato','classiDato','accountKv','kpiReale','kpiListini','f001Charts','f001Table','dqList','govList','manifestList','kpiDictList','auditTable','anaList','lstList','storicoTable','permTable'].forEach(id => $(id).innerHTML = ''); }
 
 function tile(k, v, s, cls){ return '<div class="tile ' + (cls||'') + '"><div class="k">' + esc(k) + '</div><div class="v">' + v + '</div>' + (s ? '<div class="s">' + s + '</div>' : '') + '</div>'; }
 function renderAll(){
   const st = S.data.stato;
   $('verBadge').textContent = 'v' + st.versione; $('oraServer').textContent = 'server ' + st.ora_server_rome;
-  $('hdrSub').textContent = 'Dashboard CEO · PROD · ' + (st.ruolo || '').replace('erp_', '');
+  $('hdrSub').textContent = 'PROD · ' + (st.ruolo || '').replace('erp_', '');
+  const nApprov = S.lists.listini.filter(l => l.stato === 'APPROVATO').length;
   $('tilesStato').innerHTML =
     tile('Versione in PROD', esc(st.versione), 'rilascio ' + esc(st.ultimo_rilascio_rome)) +
-    tile('KPI definitivi', st.kpi_definitivi_disponibili ? '<span class="badge reale">● disponibili</span>' : 'in attesa', st.kpi_definitivi_disponibili ? 'dati REALI verificati' : 'nessun dato REALE verificato', st.kpi_definitivi_disponibili ? 'reale' : '') +
+    tile('KPI definitivi', st.kpi_definitivi_disponibili ? '<span class="badge reale">● disponibili</span>' : 'in attesa', st.kpi_definitivi_disponibili ? 'dati REALI verificati' : 'nessuna vendita REALE verificata', st.kpi_definitivi_disponibili ? 'reale' : '') +
     tile('Righe REALE', fmtI(st.righe_reale), 'verde · verificabili', 'reale') +
     tile('Righe SIMULATO', fmtI(st.righe_simulato), 'rosa · mai nei KPI', 'simulato') +
-    tile('File ricevuti', fmtI(st.sorgenti), fmtI(st.sorgenti_verificate) + ' verificati') +
-    tile('Caricamenti', fmtI(st.batch_ok) + ' OK', (st.batch_non_ok ? fmtI(st.batch_non_ok) + ' non OK' : 'nessun errore')) +
+    tile('Anagrafiche', fmtI(S.lists.articoli.length) + ' <span class="small">articoli</span>', fmtI(S.lists.clienti.length) + ' clienti · ' + fmtI(S.lists.fornitori.length) + ' fornitori', S.lists.articoli.length ? 'reale' : '') +
+    tile('Listini', fmtI(nApprov) + ' <span class="small">approvati</span>', fmtI(S.lists.listini.filter(l => l.stato === 'IN_APPROVAZIONE').length) + ' in approvazione · ' + fmtI(S.lists.listini.filter(l => l.stato === 'BOZZA').length) + ' bozze', nApprov ? 'reale' : '') +
     tile('Qualità dati', fmtI(st.dq_violazioni) + ' <span class="small">violazioni</span>', fmtI(st.dq_ok) + ' OK su ' + fmtI(st.dq_regole) + ' regole · ' + esc(st.ultimo_dq_rome || '—')) +
-    tile('Governance', fmtI(st.moduli_ratificati) + ' moduli', 'ratificati · KPI definiti ' + fmtI(st.kpi_definiti) + ', approvati ' + fmtI(st.kpi_approvati));
+    tile('Governance', fmtI(st.moduli_ratificati) + ' moduli', 'ratificati · file ' + fmtI(st.sorgenti) + ' (' + fmtI(st.sorgenti_verificate) + ' verificati)');
   $('noteStato').innerHTML = st.kpi_definitivi_disponibili ? 'I KPI definitivi sono calcolati solo su dati REALI verificati dello scenario REALE (dizionario KPI v1).' :
-    '<b>Perché i KPI sono "in attesa":</b> finora in PROD ci sono solo dati SIMULATI (file F-001). I KPI definitivi si accendono con le esportazioni Mexal (E-01…E-06) caricate e verificate.';
-  // classi
+    '<b>Perché i KPI di vendita sono "in attesa":</b> non ci sono ancora vendite REALI verificate (arriveranno da Mexal o, dalla v0.5.0, dagli ordini dell\'app). Anagrafiche e listini approvati sono già dati REALI in verde.';
   const cl = S.data.classi || [];
   $('classiDato').innerHTML = cl.length ? '<table><tr><th>Tabella</th><th>Classe</th><th>Stato</th><th class="num">Righe</th></tr>' + cl.map(r => '<tr><td>' + esc(r.livello + '.' + r.tabella) + '</td><td>' + badgeClasse(r.classe) + '</td><td>' + esc(r.stato) + '</td><td class="num">' + fmtI(r.righe) + '</td></tr>').join('') + '</table>' : '<p class="muted">Nessuna riga caricata.</p>';
   $('accountKv').innerHTML = '<b>Email</b><span>' + esc(st.utente) + '</span><b>Ruolo ERP</b><span>' + esc(st.ruolo) + '</span><b>Ultimo accesso</b><span>' + esc(S.data.touch ? S.data.touch.ora_rome : '—') + ' (registrato in audit)</span><b>App</b><span>' + esc(CFG.app) + '</span>';
-  renderKpi(); renderF001(); renderDq(); renderGov(); renderAudit();
+  $('permTable').innerHTML = '<table><tr><th>Modulo</th><th>Legge</th><th>Scrive</th><th>Approva</th></tr>' + Object.keys(S.perms).sort().map(m => '<tr><td>' + esc(m) + '</td><td>' + (S.perms[m].LEGGI ? '✓' : '—') + '</td><td>' + (S.perms[m].SCRIVI ? '✓' : '—') + '</td><td>' + (S.perms[m].APPROVA ? '✓' : '—') + '</td></tr>').join('') + '</table>';
+  renderKpi(); renderListiniKpi(); renderF001(); renderDq(); renderGov(); renderAudit(); renderAna(); renderLst(); renderStorico();
 }
 function badgeClasse(c){ return c === 'REALE' ? '<span class="badge reale">● REALE</span>' : '<span class="badge simulato">◐ SIMULATO</span>'; }
+function stBadge(s){ return '<span class="stato ' + esc(s) + '">' + esc(String(s).replace('_', ' ')) + '</span>'; }
 
+// ---------- CRUSCOTTO ----------
 function renderKpi(){
-  const k = S.data.kpi || [], st = S.data.stato;
-  if (!k.length) { $('kpiReale').innerHTML = '<div class="note">Nessun dato REALE verificato: i KPI definitivi (ricavo netto, kg, prezzo medio, costo medio, margine €/kg e %, contribuzione) restano vuoti finché non vengono caricate e verificate le vendite Mexal. Nessun valore simulato viene mostrato qui, per principio.</div>'; return; }
+  const k = S.data.kpi || [];
+  if (!k.length) { $('kpiReale').innerHTML = '<div class="note">Nessuna vendita REALE verificata: i KPI definitivi (ricavo netto, kg, prezzo medio, costo medio, margine €/kg e %, contribuzione) restano vuoti finché non vengono caricate e verificate le vendite. Nessun valore simulato viene mostrato qui, per principio.</div>'; return; }
   const last = k[k.length - 1];
   $('kpiReale').innerHTML = '<div class="tiles">' +
     tile('Ricavo netto ' + last.nome_mese + ' ' + last.anno, '€ ' + fmtN(last.ricavo_netto_eur, 0), 'KPI-01', 'reale') +
     tile('Kg venduti', fmtN(last.kg_venduti, 0), 'KPI-02', 'reale') +
     tile('Prezzo medio', '€/kg ' + fmtN(last.prezzo_medio_eur_kg, 3), 'KPI-03 · ponderato', 'reale') +
     tile('Margine', fmtPct(last.margine_pct), '€/kg ' + fmtN(last.margine_eur_kg, 3) + ' · KPI-05/06', 'reale') + '</div>' +
-    '<div class="chart" id="kpiChart"></div><div class="tip" id="kpiTip">Tocca una barra per il valore.</div>' +
-    '<details><summary class="small">Tabella mensile</summary><div class="tbl"><table><tr><th>Mese</th><th class="num">Ricavo €</th><th class="num">Kg</th><th class="num">€/kg</th><th class="num">Costo €/kg</th><th class="num">Margine %</th><th class="num">Contrib. €</th></tr>' +
-    k.map(r => '<tr><td>' + esc(r.nome_mese + ' ' + r.anno) + '</td><td class="num">' + fmtN(r.ricavo_netto_eur, 0) + '</td><td class="num">' + fmtN(r.kg_venduti, 0) + '</td><td class="num">' + fmtN(r.prezzo_medio_eur_kg, 3) + '</td><td class="num">' + fmtN(r.costo_medio_eur_kg, 3) + '</td><td class="num">' + fmtPct(r.margine_pct) + '</td><td class="num">' + fmtN(r.contribuzione_eur, 0) + '</td></tr>').join('') + '</table></div></details>';
+    '<div class="chart" id="kpiChart"></div><div class="tip" id="kpiTip">Tocca una barra per il valore.</div>';
   barChart($('kpiChart'), k.map(r => ({label: r.nome_mese.slice(0,3) + ' ' + String(r.anno).slice(2), value: Number(r.ricavo_netto_eur)})), 'var(--reale)', v => '€ ' + fmtN(v, 0), $('kpiTip'), 'Ricavo netto mensile (KPI-01)');
 }
-
+function renderListiniKpi(){
+  const p = (S.data.prezzi || []).filter(r => r.prezzo_eur_kg !== null);
+  if (!can('LISTINI', 'LEGGI')) { $('kpiListini').innerHTML = '<p class="muted">Prezzi non visibili per il tuo ruolo.</p>'; return; }
+  if (!p.length) { $('kpiListini').innerHTML = '<div class="note">Nessun listino approvato con prezzi in €/kg. Crea un listino nella scheda Listini e approvalo: i prezzi compaiono qui in verde.</div>'; return; }
+  const byArt = {}; p.forEach(r => { (byArt[r.codice_articolo] = byArt[r.codice_articolo] || []).push(Number(r.prezzo_eur_kg)); });
+  const data = Object.keys(byArt).sort().slice(0, 12).map(a => ({label: a, value: Math.min(...byArt[a]), extra: byArt[a].length > 1 ? 'da ' + fmtN(Math.min(...byArt[a]), 3) + ' a ' + fmtN(Math.max(...byArt[a]), 3) + ' €/kg su ' + byArt[a].length + ' listini' : '1 listino'}));
+  $('kpiListini').innerHTML = '<div class="tiles">' + tile('Listini in vigore', fmtI(new Set(p.map(r => r.codice_listino)).size), 'approvati e validi oggi', 'reale') + tile('Articoli prezzati', fmtI(Object.keys(byArt).length), 'con prezzo €/kg', 'reale') + '</div>' +
+    '<div class="chart" id="lstChart"></div><div class="tip" id="lstTip">Prezzo minimo €/kg per articolo (primi 12) · tocca una barra</div>';
+  barChart($('lstChart'), data, 'var(--reale)', v => '€/kg ' + fmtN(v, 3), $('lstTip'), 'Prezzo minimo €/kg per articolo');
+}
 function renderF001(){
   const rows = S.data.f001 || [];
   if (!rows.length) { $('f001Charts').innerHTML = '<p class="muted">Nessuna riga F-001 disponibile per il tuo ruolo.</p>'; $('f001Table').innerHTML = ''; return; }
@@ -400,8 +467,6 @@ function renderF001(){
   $('f001Table').innerHTML = '<table><tr><th>Calibro</th><th>Scenario</th><th>Livello</th><th class="num">Fusti <span class="badge reale">●</span></th><th class="num">Costo</th><th class="num">Prezzo</th><th class="num">Margine</th><th class="num">%</th></tr>' +
     rows.map(r => '<tr><td>' + esc(r.calibro) + '</td><td>' + esc(r.scenario) + '</td><td>' + esc(r.livello_prezzo) + '</td><td class="num">' + fmtI(r.fusti) + '</td><td class="num">' + fmtN(r.costo_kg, 3) + '</td><td class="num">' + fmtN(r.prezzo_kg, 3) + '</td><td class="num" style="color:' + (Number(r.margine_kg) < 0 ? 'var(--critical)' : 'inherit') + '">' + fmtN(r.margine_kg, 3) + '</td><td class="num">' + fmtPct(r.margine_pct) + '</td></tr>').join('') + '</table>';
 }
-
-// grafico a barre SVG (una serie; marcatori sottili; baseline; tocco = valore)
 function barChart(el, data, color, fmt, tipEl, title, domain){
   if (!el || !data.length) return;
   const W = 640, H = 220, padL = 46, padR = 10, padT = 14, padB = 34;
@@ -418,14 +483,14 @@ function barChart(el, data, color, fmt, tipEl, title, domain){
   data.forEach((d, i) => {
     const x = padL + i * bw + (bw - bar) / 2, y0 = y(0), y1 = y(d.value), top = Math.min(y0, y1), h = Math.max(2, Math.abs(y1 - y0));
     s += '<rect class="bar" data-i="' + i + '" x="' + x + '" y="' + top + '" width="' + bar + '" height="' + h + '" rx="3" fill="' + color + '"><title>' + esc(d.label + ': ' + fmt(d.value)) + '</title></rect>';
-    const parts = String(d.label).length > 7 && /\s/.test(d.label) ? String(d.label).split(/\s+/, 2) : [String(d.label).slice(0, 9)];
+    const L = String(d.label); let parts;
+    if (L.length > 7 && /\s/.test(L)) parts = L.split(/\s+/, 2); else if (L.length > 9 && L.lastIndexOf('-') > 0) parts = [L.slice(0, L.lastIndexOf('-')), L.slice(L.lastIndexOf('-') + 1)]; else parts = [L.slice(0, 9)];
     s += '<text class="lbl" x="' + (x + bar/2) + '" y="' + (H - padB + 13) + '" text-anchor="middle">' + parts.map((t, j) => '<tspan x="' + (x + bar/2) + '" dy="' + (j ? 11 : 0) + '">' + esc(t.slice(0, 9)) + '</tspan>').join('') + '</text>';
   });
   s += '</svg>';
   el.innerHTML = s;
   el.querySelectorAll('rect.bar').forEach(r => { const show = () => { const d = data[+r.dataset.i]; if (tipEl) tipEl.textContent = d.label + ': ' + fmt(d.value) + (d.extra ? ' · ' + d.extra : ''); }; r.addEventListener('click', show); r.addEventListener('mouseenter', show); });
 }
-
 function sevClass(status, sev){ if (status === 'VIOLAZIONE') return sev === 'BLOCCANTE' ? 'critical' : 'serious'; if (status === 'ERRORE') return 'critical'; if (status === 'OK') return 'good'; return 'neutral'; }
 function sevIcon(status){ return {VIOLAZIONE:'✖', ERRORE:'⚠', OK:'✓', INFO:'ℹ', DOCUMENTALE:'▭'}[status] || '•'; }
 function renderDq(){
@@ -446,6 +511,267 @@ function renderAudit(){
   const a = S.data.audit || [];
   $('auditTable').innerHTML = a.length ? '<table><tr><th>Quando</th><th>Azione</th><th>Chi</th><th>Oggetto</th></tr>' + a.map(r => '<tr><td class="num">' + esc(r.quando_rome) + '</td><td>' + esc(r.action) + '</td><td>' + esc(r.actor_app) + '</td><td>' + esc((r.object_schema || '') + (r.object_name ? '.' + r.object_name : '')) + (r.details && r.details.version ? ' v' + esc(r.details.version) : '') + '</td></tr>').join('') + '</table>' : '<p class="muted">Nessuna azione visibile per il tuo ruolo.</p>';
 }
+function renderStorico(){
+  const s = S.data.storico || [];
+  $('storicoTable').innerHTML = s.length ? '<table><tr><th>Quando</th><th>Chi</th><th>Tabella</th><th>Op.</th><th>Chiave</th><th>Motivo</th></tr>' + s.map(r => '<tr><td class="num">' + esc(r.quando_rome) + '</td><td>' + esc(String(r.chi || '').split('@')[0]) + '</td><td>' + esc(r.tabella) + '</td><td>' + esc(r.op) + '</td><td>' + esc(r.chiave) + '</td><td>' + esc(r.motivo || '') + '</td></tr>').join('') + '</table>' : '<p class="muted">Nessuna modifica registrata (o non visibile per il tuo ruolo).</p>';
+}
+
+// ---------- ANAGRAFICHE ----------
+const opt = (arr, cur, label) => arr.map(v => { const val = typeof v === 'object' ? v.v : v, lab = typeof v === 'object' ? v.l : v; return '<option value="' + esc(val) + '"' + (String(val) === String(cur ?? '') ? ' selected' : '') + '>' + esc(lab) + '</option>'; }).join('');
+const FIELDS = {
+  articoli: [
+    {k:'codice', l:'Codice articolo', req:true, ph:'es. GR-JUMBO-F (immutabile)', lock:true},
+    {k:'descrizione', l:'Descrizione', req:true},
+    {k:'famiglia', l:'Famiglia prodotto', req:true, ph:'GRECHE, NOCELLARA, …'},
+    {k:'cultivar', l:'Cultivar'},
+    {k:'calibro', l:'Calibro', type:'select', opts: () => [{v:'', l:'— nessuno —'}].concat(S.dict.calibri.map(c => ({v:c.codice, l:c.codice + (c.nome && c.nome !== c.codice ? ' · ' + c.nome : '')})))},
+    {k:'confezione', l:'Confezione', req:true, type:'select', opts: () => CONFEZIONI},
+    {k:'kg_per_confezione', l:'Kg netti per confezione', req:true, type:'number', step:'0.001', min:'0.001'},
+    {k:'um_vendita', l:'Unità di vendita', req:true, type:'select', opts: () => S.dict.um.map(u => ({v:u.codice, l:u.codice + ' · ' + u.descrizione}))},
+    {k:'aliquota_iva', l:'IVA %', type:'number', step:'0.01', min:'0', max:'100'},
+    {k:'codice_ean', l:'EAN'},
+    {k:'stato', l:'Stato', type:'select', opts: () => ['ATTIVO', 'OBSOLETO']},
+    {k:'note', l:'Note', type:'textarea'}
+  ],
+  clienti: [
+    {k:'codice', l:'Codice cliente', req:true, ph:'es. 501.00123 (immutabile)', lock:true},
+    {k:'ragione_sociale', l:'Ragione sociale', req:true},
+    {k:'canale', l:'Canale', req:true, type:'select', opts: () => S.dict.canali.map(c => ({v:c.codice, l:c.codice + ' · ' + c.descrizione}))},
+    {k:'gruppo_insegna', l:'Gruppo / insegna'},
+    {k:'partita_iva', l:'Partita IVA'},
+    {k:'codice_fiscale', l:'Codice fiscale'},
+    {k:'indirizzo', l:'Indirizzo'},
+    {k:'cap', l:'CAP'}, {k:'comune', l:'Comune'}, {k:'provincia', l:'Provincia (sigla)', ph:'CE'},
+    {k:'nazione', l:'Nazione (2 lettere)', ph:'IT'},
+    {k:'agente', l:'Agente'},
+    {k:'listino_assegnato', l:'Listino assegnato (codice)'},
+    {k:'condizioni_pagamento', l:'Condizioni di pagamento', ph:'RB 60 GG FM'},
+    {k:'zona', l:'Zona'},
+    {k:'stato', l:'Stato', type:'select', opts: () => ['ATTIVO', 'SOSPESO']},
+    {k:'note', l:'Note', type:'textarea'}
+  ],
+  fornitori: [
+    {k:'codice', l:'Codice fornitore', req:true, ph:'es. AMFIPOLIVE (immutabile)', lock:true},
+    {k:'ragione_sociale', l:'Ragione sociale', req:true},
+    {k:'tipo', l:'Tipo', req:true, type:'select', opts: () => TIPI_FORN},
+    {k:'partita_iva', l:'Partita IVA'},
+    {k:'nazione', l:'Nazione (2 lettere)', ph:'IT'},
+    {k:'plus_contrattuale', l:'Plus contrattuale'},
+    {k:'condizioni_pagamento', l:'Condizioni di pagamento'},
+    {k:'stato', l:'Stato', type:'select', opts: () => ['ATTIVO', 'SOSPESO']},
+    {k:'note', l:'Note', type:'textarea'}
+  ]
+};
+const RPC_SAVE = {articoli: 'fn_articolo_salva', clienti: 'fn_cliente_salva', fornitori: 'fn_fornitore_salva'};
+function anaTitle(kind, r){ return kind === 'articoli' ? r.descrizione : r.ragione_sociale; }
+function anaSub(kind, r){
+  if (kind === 'articoli') return [r.famiglia, r.calibro, r.confezione, fmtN(r.kg_per_confezione, 3) + ' kg', r.um_vendita].filter(Boolean).join(' · ');
+  if (kind === 'clienti') return [r.canale, r.gruppo_insegna, r.provincia, r.agente ? 'ag. ' + r.agente : null, r.listino_assegnato ? 'listino ' + r.listino_assegnato : null].filter(Boolean).join(' · ');
+  return [r.tipo, r.nazione, r.condizioni_pagamento].filter(Boolean).join(' · ');
+}
+function renderAna(){
+  const kind = S.sub.Anagrafiche, q = ($('anaSearch').value || '').trim().toLowerCase();
+  const rows = (S.lists[kind] || []).filter(r => !q || (r.codice + ' ' + anaTitle(kind, r) + ' ' + (r.famiglia || '') + ' ' + (r.gruppo_insegna || '')).toLowerCase().includes(q));
+  $('anaCount').textContent = rows.length + ' ' + kind + (q ? ' trovati' : '') + (can('ANAGRAFICHE', 'SCRIVI') ? '' : ' · sola lettura per il tuo ruolo');
+  $('btnAnaNew').classList.toggle('off', !can('ANAGRAFICHE', 'SCRIVI')); $('btnAnaNew').disabled = !can('ANAGRAFICHE', 'SCRIVI');
+  $('anaList').innerHTML = rows.length ? rows.map(r => '<div class="it" data-k="' + esc(r.codice) + '"><div class="t"><span class="badge info">' + esc(r.codice) + '</span> ' + esc(anaTitle(kind, r)) + (r.stato !== 'ATTIVO' ? ' <span class="badge warn">' + esc(r.stato) + '</span>' : '') + '</div><div class="d">' + esc(anaSub(kind, r)) + '</div></div>').join('') : '<p class="muted">Nessun elemento. ' + (can('ANAGRAFICHE', 'SCRIVI') ? 'Premi “+ Nuovo” oppure importa il modello M-01 dalla scheda Altro.' : '') + '</p>';
+  $('anaList').querySelectorAll('.it').forEach(el => el.onclick = () => anaOpen(kind, (S.lists[kind] || []).find(r => r.codice === el.dataset.k)));
+}
+$('anaSearch').oninput = renderAna;
+$('btnAnaNew').onclick = () => anaOpen(S.sub.Anagrafiche, null);
+let anaCloseTimer = null;
+function anaOpen(kind, row){
+  if (anaCloseTimer) { clearTimeout(anaCloseTimer); anaCloseTimer = null; }
+  S.editing = {kind, row};
+  const ro = !can('ANAGRAFICHE', 'SCRIVI');
+  $('anaFormTitle').textContent = (row ? 'Modifica ' : 'Nuovo ') + ({articoli: 'articolo', clienti: 'cliente', fornitori: 'fornitore'})[kind];
+  $('anaForm').innerHTML = FIELDS[kind].map(f => {
+    const cur = row ? row[f.k] : (f.k === 'stato' ? 'ATTIVO' : f.k === 'nazione' ? 'IT' : f.k === 'tipo' ? 'OLIVE' : '');
+    const dis = ro || (f.lock && row) ? ' disabled' : '';
+    let inp;
+    if (f.type === 'select') inp = '<select id="f_' + f.k + '"' + dis + '>' + opt(f.opts(), cur) + '</select>';
+    else if (f.type === 'textarea') inp = '<textarea id="f_' + f.k + '"' + dis + '>' + esc(cur ?? '') + '</textarea>';
+    else inp = '<input id="f_' + f.k + '" type="' + (f.type || 'text') + '"' + (f.step ? ' step="' + f.step + '"' : '') + (f.min ? ' min="' + f.min + '"' : '') + (f.max ? ' max="' + f.max + '"' : '') + ' value="' + esc(cur ?? '') + '"' + (f.ph ? ' placeholder="' + esc(f.ph) + '"' : '') + dis + (f.type === 'number' ? ' inputmode="decimal"' : '') + '>';
+    return '<label for="f_' + f.k + '" class="' + (f.req ? 'req' : '') + '">' + esc(f.l) + '</label>' + inp;
+  }).join('') + '<label for="f_motivo">Motivo della modifica (va nel registro)</label><input id="f_motivo" type="text" placeholder="es. nuovo prodotto 2026"' + (ro ? ' disabled' : '') + '>' +
+    '<div class="row" style="margin-top:12px"><button type="submit" id="btnAnaSave"' + (ro ? ' disabled' : '') + '>Salva</button><button type="button" class="sm sec" id="btnAnaCancel">Chiudi</button></div>';
+  $('anaMsg').innerHTML = '';
+  $('anaFormCard').classList.remove('hidden'); $('anaFormCard').scrollIntoView({behavior: 'smooth', block: 'start'});
+  $('btnAnaCancel').onclick = anaCloseForm;
+}
+function anaCloseForm(){ S.editing = null; $('anaFormCard').classList.add('hidden'); }
+$('anaForm').onsubmit = async (ev) => {
+  ev.preventDefault(); if (!S.editing) return;
+  const {kind, row} = S.editing, p = {};
+  FIELDS[kind].forEach(f => { const el = $('f_' + f.k); if (!el) return; const v = el.value; if (f.lock && row) p[f.k] = row.codice; else p[f.k] = (v === '' ? null : v); });
+  p.motivo = $('f_motivo').value || null;
+  const b = $('btnAnaSave'); b.disabled = true; b.textContent = 'Salvo…';
+  try {
+    const r = await rpc(RPC_SAVE[kind], {p_dati: p});
+    msg('anaMsg', '✓ Salvato <b>' + esc(r.codice) + '</b> (registrato nel change_log).', 'ok');
+    await reloadLists(); S.editing = {kind, row: (S.lists[kind] || []).find(x => x.codice === r.codice) || r};
+    anaCloseTimer = setTimeout(() => { anaCloseTimer = null; anaCloseForm(); }, 900);
+  } catch(e) { msg('anaMsg', '<b>Non salvato:</b> ' + esc(explain(e)), 'err'); }
+  finally { b.disabled = false; b.textContent = 'Salva'; }
+};
+async function reloadLists(){
+  const [articoli, clienti, fornitori, listini, prezzi, storico, classi] = await Promise.all([
+    view('v_articoli', 'select=*&order=codice'), view('v_clienti', 'select=*&order=ragione_sociale'), view('v_fornitori', 'select=*&order=ragione_sociale'),
+    view('v_listini', 'select=*&order=codice_listino,versione.desc'), view('v_prezzi_correnti', 'select=*&order=codice_listino,codice_articolo'), view('v_storico_ops'), view('v_classi_dato')]);
+  S.lists = {articoli: articoli || [], clienti: clienti || [], fornitori: fornitori || [], listini: listini || []};
+  Object.assign(S.data, {prezzi, storico, classi});
+  if (S.data.stato) renderAll(); else { renderAna(); renderLst(); renderStorico(); renderListiniKpi(); }
+}
+
+// ---------- LISTINI ----------
+function lstCliente(l){ return l.codice_cliente ? (l.cliente || l.codice_cliente) : (l.canale ? 'canale ' + l.canale : 'base (tutti)'); }
+function renderLst(){
+  const f = $('lstFiltro').value, rows = (S.lists.listini || []).filter(l => !f || l.stato === f);
+  const w = can('LISTINI', 'SCRIVI');
+  $('btnLstNew').classList.toggle('off', !w); $('btnLstNew').disabled = !w;
+  $('lstCount').textContent = can('LISTINI', 'LEGGI') ? rows.length + ' listini' + (w ? '' : ' · sola lettura') : 'I listini non sono visibili per il tuo ruolo.';
+  $('lstList').innerHTML = rows.length ? rows.map(l => '<div class="it" data-id="' + l.listino_id + '"><div class="t"><span class="badge info">' + esc(l.codice_listino) + ' v' + l.versione + '</span> ' + esc(l.nome) + ' ' + stBadge(l.stato) + '</div><div class="d">' + esc(lstCliente(l)) + ' · dal ' + fmtD(l.valido_dal) + (l.valido_al ? ' al ' + fmtD(l.valido_al) : '') + ' · ' + fmtI(l.n_righe) + ' righe' + (l.approvato_da ? ' · approvato da ' + esc(String(l.approvato_da).split('@')[0]) : '') + '</div></div>').join('') : '<p class="muted">Nessun listino' + (f ? ' in stato ' + f : '') + '.</p>';
+  $('lstList').querySelectorAll('.it').forEach(el => el.onclick = () => lstOpen(+el.dataset.id));
+}
+$('lstFiltro').onchange = renderLst;
+$('btnLstNew').onclick = () => lstEdit(null);
+async function lstOpen(id){
+  $('lstFormCard').classList.add('hidden');
+  const d = $('lstDetail'); d.classList.remove('hidden'); d.innerHTML = '<span class="spin"></span> Carico…'; d.scrollIntoView({behavior: 'smooth', block: 'start'});
+  try {
+    const l = await rpc('fn_listino_leggi', {p_listino_id: id});
+    if (!l) throw new Error('Listino non visibile');
+    S.lstEditing = null;
+    const w = can('LISTINI', 'SCRIVI'), a = can('LISTINI', 'APPROVA');
+    const acts = [];
+    if (l.stato === 'BOZZA') { if (w) acts.push(['edit', 'Modifica'], ['INVIA', 'Invia in approvazione'], ['ANNULLA', 'Annulla']); }
+    if (l.stato === 'IN_APPROVAZIONE') { if (a) acts.push(['APPROVA', 'Approva'], ['RIFIUTA', 'Rifiuta']); if (w) acts.push(['ANNULLA', 'Annulla']); }
+    if (l.stato === 'APPROVATO' || l.stato === 'SCADUTO') { if (w) acts.push(['NUOVA_VERSIONE', 'Nuova versione']); if (w && l.stato === 'APPROVATO') acts.push(['ANNULLA', 'Annulla']); }
+    const art = Object.fromEntries((S.lists.articoli || []).map(x => [x.codice, x]));
+    d.innerHTML = '<h2>' + esc(l.codice_listino) + ' v' + l.versione + ' ' + stBadge(l.stato) + '<button class="xs sec" id="btnLstClose" style="margin-left:auto">Chiudi</button></h2>' +
+      '<div class="kv"><b>Nome</b><span>' + esc(l.nome) + '</span><b>Vale per</b><span>' + esc(lstCliente(l)) + '</span><b>Validità</b><span>dal ' + fmtD(l.valido_dal) + (l.valido_al ? ' al ' + fmtD(l.valido_al) : ' (aperta)') + '</span>' +
+      (l.proposto_da ? '<b>Proposto</b><span>' + esc(l.proposto_da) + '</span>' : '') + (l.approvato_da ? '<b>Approvato</b><span>' + esc(l.approvato_da) + ' · ' + esc(String(l.approvato_il || '').slice(0, 16).replace('T', ' ')) + '</span>' : '') +
+      (l.motivo_rifiuto ? '<b>Rifiuto</b><span style="color:var(--critical)">' + esc(l.motivo_rifiuto) + '</span>' : '') + (l.fact_batch_id ? '<b>Batch fact</b><span class="small">' + esc(l.fact_batch_id) + '</span>' : '') + (l.note ? '<b>Note</b><span>' + esc(l.note) + '</span>' : '') + '</div>' +
+      '<div class="sect">Righe (' + (l.righe || []).length + ')</div><div class="list">' +
+      (l.righe || []).map(r => { const a0 = art[r.codice_articolo] || r; const kg = r.prezzo_per === 'KG' ? Number(r.prezzo) : (r.prezzo_per === 'CONFEZIONE' && a0.kg_per_confezione ? Number(r.prezzo) / Number(a0.kg_per_confezione) : null);
+        return '<div class="it" style="cursor:default"><div class="t"><span class="badge info">' + esc(r.codice_articolo) + '</span> ' + esc(r.descrizione || '') + '</div><div class="d"><b>€ ' + fmtN(r.prezzo, 2) + '</b> per ' + esc(r.prezzo_per.toLowerCase()) + ' · ' + esc(r.livello) + (kg === null ? '' : ' · <b>' + fmtN(kg, 3) + ' €/kg</b>') + (Number(r.sconto_pct) ? ' · sconto ' + fmtN(r.sconto_pct, 1) + '%' : '') + (Number(r.premialita_1_pct) ? ' · premio ' + fmtN(r.premialita_1_pct, 1) + '%' : '') + (r.promo ? ' · ' + esc(r.promo) : '') + '</div></div>'; }).join('') + '</div>' +
+      '<div class="row" style="margin-top:12px">' + acts.map(a1 => '<button class="sm" data-act="' + a1[0] + '">' + a1[1] + '</button>').join('') + '</div><div id="lstDetMsg"></div>';
+    $('btnLstClose').onclick = () => d.classList.add('hidden');
+    d.querySelectorAll('button[data-act]').forEach(b => b.onclick = () => lstAction(l, b.dataset.act, b));
+  } catch(e) { d.innerHTML = '<div class="msg err">' + esc(explain(e)) + '</div>'; }
+}
+async function lstAction(l, act, btn){
+  if (act === 'edit') return lstEdit(l);
+  let nota = null;
+  if (act === 'RIFIUTA') { nota = prompt('Motivo del rifiuto (torna in bozza):'); if (nota === null) return; }
+  if (act === 'ANNULLA' && !confirm('Annullare il listino ' + l.codice_listino + ' v' + l.versione + '? Resta nello storico, non si può riaprire.')) return;
+  if (act === 'APPROVA' && !confirm('Approvare ' + l.codice_listino + ' v' + l.versione + '? I prezzi diventano REALI/VERIFICATI e entrano nel database analitico.')) return;
+  if (act === 'INVIA') nota = prompt('Nota per chi approva (facoltativa):') || null;
+  if (act === 'NUOVA_VERSIONE') nota = prompt('Motivo della nuova versione (es. rincaro 2027):') || null;
+  btn.disabled = true;
+  try { const r = await rpc('fn_listino_azione', {p_listino_id: l.listino_id, p_azione: act, p_nota: nota}); await reloadLists(); await lstOpen(r.listino_id); msg('lstDetMsg', '✓ ' + act.replace('_', ' ') + ' eseguito.', 'ok'); }
+  catch(e) { msg('lstDetMsg', '<b>Non eseguito:</b> ' + esc(explain(e)), 'err'); btn.disabled = false; }
+}
+function rigaHtml(r, i){
+  const arts = (S.lists.articoli || []).filter(a => a.stato === 'ATTIVO' || a.codice === (r && r.codice_articolo));
+  return '<div class="riga" data-i="' + i + '"><label class="req">Articolo</label><select class="r_art">' + opt([{v:'', l:'— scegli —'}].concat(arts.map(a => ({v:a.codice, l:a.codice + ' · ' + a.descrizione}))), r ? r.codice_articolo : '') + '</select>' +
+    '<div class="grid3"><div><label class="req">Prezzo €</label><input class="r_prezzo" type="number" step="0.0001" min="0.0001" inputmode="decimal" value="' + esc(r ? r.prezzo : '') + '"></div><div><label>Per</label><select class="r_per">' + opt(['KG', 'CONFEZIONE', 'PZ', 'FUSTO'], r ? r.prezzo_per : 'KG') + '</select></div><div><label>Livello</label><select class="r_liv">' + opt(['LISTINO', 'CONTRATTO', 'NETTO'], r ? r.livello : 'LISTINO') + '</select></div></div>' +
+    '<div class="grid3"><div><label>Sconto %</label><input class="r_sc" type="number" step="0.001" min="0" max="99.999" inputmode="decimal" value="' + esc(r ? r.sconto_pct : 0) + '"></div><div><label>Premio 1 %</label><input class="r_p1" type="number" step="0.001" min="0" inputmode="decimal" value="' + esc(r ? r.premialita_1_pct : 0) + '"></div><div><label>Premio 2 %</label><input class="r_p2" type="number" step="0.001" min="0" inputmode="decimal" value="' + esc(r ? r.premialita_2_pct : 0) + '"></div></div>' +
+    '<label>Promo / note</label><input class="r_promo" type="text" value="' + esc(r ? (r.promo || '') : '') + '"><div class="row" style="margin-top:6px"><button type="button" class="xs r_del">✕ togli riga</button></div></div>';
+}
+function lstEdit(l){
+  S.lstEditing = l ? {listino_id: l.listino_id, codice_listino: l.codice_listino} : {};
+  $('lstDetail').classList.add('hidden');
+  $('lstFormTitle').textContent = l ? 'Modifica ' + l.codice_listino + ' v' + l.versione + ' (bozza)' : 'Nuovo listino';
+  const cli = [{v:'', l:'— nessuno (canale o base) —'}].concat((S.lists.clienti || []).map(c => ({v:c.codice, l:c.codice + ' · ' + c.ragione_sociale})));
+  const can0 = [{v:'', l:'— nessuno —'}].concat(S.dict.canali.map(c => ({v:c.codice, l:c.codice + ' · ' + c.descrizione})));
+  $('lstForm').innerHTML = '<label class="req" for="l_codice">Codice listino</label><input id="l_codice" type="text" placeholder="es. GDO-CONAD-2026" value="' + esc(l ? l.codice_listino : '') + '"' + (l ? ' disabled' : '') + '>' +
+    '<label class="req" for="l_nome">Nome</label><input id="l_nome" type="text" value="' + esc(l ? l.nome : '') + '">' +
+    '<div class="grid2"><div><label for="l_cli">Cliente</label><select id="l_cli">' + opt(cli, l ? l.codice_cliente : '') + '</select></div><div><label for="l_can">oppure canale</label><select id="l_can">' + opt(can0, l ? l.canale : '') + '</select></div></div>' +
+    '<div class="grid2"><div><label class="req" for="l_dal">Valido dal</label><input id="l_dal" type="date" value="' + esc(l ? String(l.valido_dal).slice(0, 10) : new Date().toISOString().slice(0, 10)) + '"></div><div><label for="l_al">Valido al</label><input id="l_al" type="date" value="' + esc(l && l.valido_al ? String(l.valido_al).slice(0, 10) : '') + '"></div></div>' +
+    '<label for="l_note">Note</label><input id="l_note" type="text" value="' + esc(l ? (l.note || '') : '') + '">' +
+    '<div class="sect">Righe (prezzi)</div><div id="l_righe">' + ((l && l.righe) || []).map((r, i) => rigaHtml(r, i)).join('') + '</div>' +
+    '<div class="row"><button type="button" class="sm sec" id="btnRigaAdd">+ Aggiungi riga</button></div>' +
+    '<label for="l_motivo">Motivo (va nel registro)</label><input id="l_motivo" type="text">' +
+    '<div class="row" style="margin-top:12px"><button type="submit" id="btnLstSave">Salva bozza</button><button type="button" class="sm sec" id="btnLstCancel">Chiudi</button></div>';
+  $('lstMsg').innerHTML = '';
+  $('lstFormCard').classList.remove('hidden'); $('lstFormCard').scrollIntoView({behavior: 'smooth', block: 'start'});
+  if (!l) $('l_righe').insertAdjacentHTML('beforeend', rigaHtml(null, 0));
+  bindRighe();
+  $('btnRigaAdd').onclick = () => { $('l_righe').insertAdjacentHTML('beforeend', rigaHtml(null, $('l_righe').children.length)); bindRighe(); };
+  $('btnLstCancel').onclick = () => { S.lstEditing = null; $('lstFormCard').classList.add('hidden'); };
+}
+function bindRighe(){ $('l_righe').querySelectorAll('.r_del').forEach(b => b.onclick = () => b.closest('.riga').remove()); }
+$('lstForm').onsubmit = async (ev) => {
+  ev.preventDefault(); if (!S.lstEditing) return;
+  const righe = [...$('l_righe').querySelectorAll('.riga')].map(r => ({codice_articolo: r.querySelector('.r_art').value, prezzo: r.querySelector('.r_prezzo').value, prezzo_per: r.querySelector('.r_per').value, livello: r.querySelector('.r_liv').value,
+    sconto_pct: r.querySelector('.r_sc').value || 0, premialita_1_pct: r.querySelector('.r_p1').value || 0, premialita_2_pct: r.querySelector('.r_p2').value || 0, promo: r.querySelector('.r_promo').value || null}));
+  const p = {listino_id: S.lstEditing.listino_id || null, codice_listino: S.lstEditing.codice_listino || $('l_codice').value, nome: $('l_nome').value, codice_cliente: $('l_cli').value || null, canale: $('l_can').value || null,
+    valido_dal: $('l_dal').value, valido_al: $('l_al').value || null, note: $('l_note').value || null, motivo: $('l_motivo').value || null, righe};
+  const b = $('btnLstSave'); b.disabled = true; b.textContent = 'Salvo…';
+  try { const r = await rpc('fn_listino_salva', {p_dati: p}); msg('lstMsg', '✓ Bozza salvata: ' + esc(r.codice_listino) + ' v' + r.versione + ' con ' + (r.righe || []).length + ' righe.', 'ok'); await reloadLists(); $('lstFormCard').classList.add('hidden'); await lstOpen(r.listino_id); }
+  catch(e) { msg('lstMsg', '<b>Non salvato:</b> ' + esc(explain(e)), 'err'); }
+  finally { b.disabled = false; b.textContent = 'Salva bozza'; }
+};
+
+// ---------- IMPORT M-01 ----------
+const M01 = {
+  ARTICOLI: {k: 'articoli', map: {codice_articolo:'codice', descrizione:'descrizione', famiglia_prodotto:'famiglia', cultivar:'cultivar', calibro:'calibro', confezione:'confezione', kg_netti_per_confezione:'kg_per_confezione', um_vendita:'um_vendita', aliquota_iva:'aliquota_iva', codice_ean:'codice_ean', stato:'stato', note:'note'}, pct: ['aliquota_iva']},
+  CLIENTI: {k: 'clienti', map: {codice_cliente:'codice', ragione_sociale:'ragione_sociale', canale:'canale', gruppo_insegna:'gruppo_insegna', provincia:'provincia', nazione:'nazione', agente:'agente', listino_assegnato:'listino_assegnato', condizioni_pagamento:'condizioni_pagamento', note:'note'}, pct: []},
+  LISTINI: {k: 'listini', map: {codice_listino:'codice_listino', codice_cliente:'codice_cliente', canale:'canale', codice_articolo:'codice_articolo', prezzo:'prezzo', prezzo_per:'prezzo_per', livello_prezzo:'livello_prezzo', valido_dal:'valido_dal', valido_al:'valido_al', sconto_pct:'sconto_pct', premialita_1_pct:'premialita_1_pct', premialita_2_pct:'premialita_2_pct', promo:'promo', note:'note'}, pct: ['sconto_pct', 'premialita_1_pct', 'premialita_2_pct']}
+};
+let xlsxLoading = null;
+function loadXlsx(){ if (window.XLSX) return Promise.resolve(); if (!xlsxLoading) xlsxLoading = new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'vendor/xlsx.full.min.js'; s.onload = res; s.onerror = () => rej(new Error('Libreria Excel non caricata')); document.head.appendChild(s); }); return xlsxLoading; }
+function cellVal(v, isPct, isDate){
+  if (v === undefined || v === null || v === '') return null;
+  if (isDate) {
+    if (typeof v === 'number') return new Date(Date.UTC(1899, 11, 30) + Math.round(v) * 86400000).toISOString().slice(0, 10);   // seriale Excel → data (indipendente dal fuso)
+    if (v instanceof Date) return v.getFullYear() + '-' + String(v.getMonth() + 1).padStart(2, '0') + '-' + String(v.getDate()).padStart(2, '0');
+    const m = String(v).match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/); if (m) return m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0'); return String(v).slice(0, 10);
+  }
+  if (isPct) { const n = Number(v); return isNaN(n) ? v : Math.round(n * 100 * 1000) / 1000; }
+  if (v instanceof Date) return v.getFullYear() + '-' + String(v.getMonth() + 1).padStart(2, '0') + '-' + String(v.getDate()).padStart(2, '0');
+  return typeof v === 'string' ? v.trim() : v;
+}
+async function sha256Hex(buf){ const h = await crypto.subtle.digest('SHA-256', buf); return [...new Uint8Array(h)].map(b => b.toString(16).padStart(2, '0')).join(''); }
+$('impFile').onchange = async () => {
+  const f = $('impFile').files[0]; S.imp = null; $('btnImport').disabled = true; $('impMsg').innerHTML = '';
+  if (!f) { $('impPreview').innerHTML = ''; return; }
+  $('impPreview').innerHTML = '<span class="spin"></span> Leggo il file…';
+  try {
+    await loadXlsx();
+    const buf = await f.arrayBuffer(); const sha = await sha256Hex(buf);
+    const wb = XLSX.read(buf, {type: 'array', cellDates: false});
+    const payload = {file_name: f.name, file_sha256: sha, motivo: 'import M-01 ' + f.name}; const summary = [];
+    Object.keys(M01).forEach(sheet => {
+      const ws = wb.Sheets[sheet]; if (!ws) { summary.push(sheet + ': foglio assente'); return; }
+      const rows = XLSX.utils.sheet_to_json(ws, {defval: null, raw: true});
+      const spec = M01[sheet], out = [];
+      rows.forEach(r0 => {
+        const r = {}; let any = false;
+        Object.keys(r0).forEach(h => { const key = String(h).replace(/\s*\*$/, '').trim(); const tgt = spec.map[key]; if (!tgt) return; const v = cellVal(r0[h], spec.pct.includes(key), /^valido_/.test(key)); if (v !== null && v !== '') any = true; r[tgt] = v; });
+        if (any) out.push(r);
+      });
+      payload[spec.k] = out; summary.push(sheet + ': ' + out.length + ' righe');
+    });
+    ['COSTI_OLIVE', 'COSTI_LAVORAZIONE', 'FUSTI'].forEach(sh => { const ws = wb.Sheets[sh]; if (ws) { const n = XLSX.utils.sheet_to_json(ws, {defval: null}).filter(r => Object.values(r).some(v => v !== null && v !== '')).length; if (n) summary.push(sh + ': ' + n + ' righe (v0.4.0, non importate ora)'); } });
+    const tot = (payload.articoli || []).length + (payload.clienti || []).length + (payload.listini || []).length;
+    S.imp = payload;
+    $('impPreview').innerHTML = '<div class="kv"><b>File</b><span>' + esc(f.name) + ' · ' + fmtI(f.size) + ' byte</span><b>SHA-256</b><span class="small">' + sha.slice(0, 24) + '…</span><b>Contenuto</b><span>' + esc(summary.join(' · ')) + '</span></div>' +
+      (payload.articoli && payload.articoli.length ? '<details><summary class="small">Anteprima articoli</summary><div class="tbl"><table><tr><th>Codice</th><th>Descrizione</th><th>Fam.</th><th>Calibro</th><th>Conf.</th><th class="num">Kg</th><th>UM</th></tr>' + payload.articoli.slice(0, 50).map(a => '<tr><td>' + esc(a.codice) + '</td><td>' + esc(a.descrizione) + '</td><td>' + esc(a.famiglia) + '</td><td>' + esc(a.calibro) + '</td><td>' + esc(a.confezione) + '</td><td class="num">' + esc(a.kg_per_confezione) + '</td><td>' + esc(a.um_vendita) + '</td></tr>').join('') + '</table></div></details>' : '') +
+      (payload.listini && payload.listini.length ? '<details><summary class="small">Anteprima listini</summary><div class="tbl"><table><tr><th>Listino</th><th>Cliente/canale</th><th>Articolo</th><th class="num">Prezzo</th><th>Per</th><th>Dal</th></tr>' + payload.listini.slice(0, 50).map(a => '<tr><td>' + esc(a.codice_listino) + '</td><td>' + esc(a.codice_cliente || a.canale || 'base') + '</td><td>' + esc(a.codice_articolo) + '</td><td class="num">' + esc(a.prezzo) + '</td><td>' + esc(a.prezzo_per) + '</td><td>' + esc(a.valido_dal) + '</td></tr>').join('') + '</table></div></details>' : '');
+    $('btnImport').disabled = !(tot && can('ANAGRAFICHE', 'SCRIVI'));
+    if (!tot) $('impMsg').innerHTML = '<div class="msg">Nessuna riga nei fogli ARTICOLI, CLIENTI, LISTINI.</div>';
+  } catch(e) { $('impPreview').innerHTML = '<div class="msg err">File non leggibile: ' + esc(e.message) + '</div>'; }
+};
+$('btnImport').onclick = async () => {
+  if (!S.imp) return;
+  if (!confirm('Caricare nel database ' + ((S.imp.articoli || []).length) + ' articoli, ' + ((S.imp.clienti || []).length) + ' clienti e ' + ((S.imp.listini || []).length) + ' righe di listino (in bozza)? Tutto o niente.')) return;
+  const b = $('btnImport'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Carico…';
+  try { const r = await rpc('fn_import_m01', {p_dati: S.imp}); msg('impMsg', '✓ Import eseguito: ' + fmtI(r.articoli) + ' articoli, ' + fmtI(r.clienti) + ' clienti, ' + fmtI(r.fornitori) + ' fornitori, ' + fmtI(r.listini) + ' listini (in BOZZA: approvali nella scheda Listini). Tutto è nel registro delle modifiche.', 'ok'); S.imp = null; $('impFile').value = ''; $('impPreview').innerHTML = ''; await reloadLists(); }
+  catch(e) { msg('impMsg', '<b>Import non eseguito</b> (nessuna riga scritta):\n' + esc(explain(e)).replace(/ \|\| /g, '\n'), 'err'); b.disabled = false; }
+  finally { b.innerHTML = 'Carica nel database'; }
+};
 
 // ---------- PWA ----------
 let deferredInstall = null;

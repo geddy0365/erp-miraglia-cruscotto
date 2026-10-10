@@ -1,13 +1,13 @@
 {
-  "name": "Cruscotto ERP Miraglia",
+  "name": "ERP Miraglia",
   "short_name": "ERP Miraglia",
-  "description": "Dashboard CEO dell'ERP Miraglia S.r.l.: stato, KPI (REALE verde / SIMULATO rosa), qualità dati, governance, audit.",
+  "description": "ERP Miraglia S.r.l. dal telefono: cruscotto (KPI REALE verde / SIMULATO rosa), anagrafiche, listini con approvazione, import, audit.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f4f3ee",
-  "theme_color": "#1b3a2a",
+  "background_color": "#eef4f7",
+  "theme_color": "#2e5e4e",
   "lang": "it",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" }
