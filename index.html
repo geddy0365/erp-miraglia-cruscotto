@@ -81,6 +81,8 @@ textarea{min-height:64px}
 label{font-size:13px;color:var(--ink-2);display:block;margin:8px 0 4px}
 label.req::after{content:" *";color:var(--critical)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.grid2>*,.riga .grid3>*{min-width:0}
+input,select,textarea{max-width:100%;min-width:0}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line);z-index:5}
 nav.tabs button{flex:1;padding:8px 2px;min-height:50px;font-size:12px;line-height:1.1;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:10px}
 nav.tabs button span.ic{font-size:17px}
@@ -257,7 +259,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 const CFG = {
   url: 'https://sqzxjuvxrtifhagjqjqq.supabase.co',
   key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxenhqdXZ4cnRpZmhhZ2pxanFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MjkzMjYsImV4cCI6MjEwNzEwNTMyNn0.uy1gZj0fcRb37QpzcPi2S99ZroAdOq2BmutF82E20A0',
-  schema: 'api', app: 'erp 0.3.1'
+  schema: 'api', app: 'erp 0.3.2'
 };
 const LS = 'erp_cruscotto_session';
 const S = { session: null, data: {}, perms: {}, dict: {calibri: [], canali: [], um: []}, lists: {articoli: [], clienti: [], fornitori: [], listini: []},
@@ -330,7 +332,7 @@ function explain(e){
   if (e.code === 'PGRST106' || /schema must be one of/i.test(e.message || '')) return 'Lo schema "api" non è esposto all\'API REST: nel pannello Supabase → Project Settings → Data API → "Exposed schemas" aggiungi "api" e salva. Poi premi Aggiorna.';
   if (e.status === 401) return 'Sessione scaduta o non valida: esci e rientra.';
   if (e.code === '42501') return 'Permesso negato: ' + (e.message || '');
-  if (e.status === 404 && /rpc|function/i.test(e.message || '')) return 'Funzione non trovata: il database è alla versione precedente (serve la v0.3.1).';
+  if (e.status === 404 && /rpc|function/i.test(e.message || '')) return 'Funzione non trovata: il database è alla versione precedente (serve la v0.3.2).';
   if (e.status === 403 || e.status === 404) return 'Accesso negato (' + e.status + '): ' + (e.message || '');
   if (/Failed to fetch|NetworkError|Load failed/i.test(e.message || '')) return 'Rete non raggiungibile. Controlla la connessione e premi Aggiorna.';
   return e.message || String(e);
@@ -703,7 +705,7 @@ async function lstOpen(id){
       '<div class="kv"><b>Nome</b><span>' + esc(l.nome) + '</span><b>Vale per</b><span>' + esc(lstCliente(l)) + '</span><b>Validità</b><span>dal ' + fmtD(l.valido_dal) + (l.valido_al ? ' al ' + fmtD(l.valido_al) : ' (aperta)') + '</span>' +
       (l.proposto_da ? '<b>Proposto</b><span>' + esc(l.proposto_da) + '</span>' : '') + (l.approvato_da ? '<b>Approvato</b><span>' + esc(l.approvato_da) + ' · ' + esc(String(l.approvato_il || '').slice(0, 16).replace('T', ' ')) + '</span>' : '') +
       (l.motivo_rifiuto ? '<b>Rifiuto</b><span style="color:var(--critical)">' + esc(l.motivo_rifiuto) + '</span>' : '') + (l.fact_batch_id ? '<b>Batch fact</b><span class="small">' + esc(l.fact_batch_id) + '</span>' : '') + (l.note ? '<b>Note</b><span>' + esc(l.note) + '</span>' : '') + '</div>' +
-      '<div class="sect">Righe (' + (l.righe || []).length + ')</div><div class="list">' +
+      '<div class="sect">Righe (' + (l.righe || []).length + ')</div>' + (!(l.righe || []).length && l.stato === 'BOZZA' ? '<div class="note">Nessun prezzo ancora: tocca <b>Modifica</b>, poi <b>+ Aggiungi riga</b> per ogni articolo. Si invia in approvazione solo con almeno una riga.</div>' : '') + '<div class="list">' +
       (l.righe || []).map(r => { const a0 = art[r.codice_articolo] || r; const kg = r.prezzo_per === 'KG' ? Number(r.prezzo) : (r.prezzo_per === 'CONFEZIONE' && a0.kg_per_confezione ? Number(r.prezzo) / Number(a0.kg_per_confezione) : null);
         return '<div class="it" style="cursor:default"><div class="t"><span class="badge info">' + esc(r.codice_articolo) + '</span> ' + esc(r.descrizione || '') + '</div><div class="d"><b>€ ' + fmtN(r.prezzo, 2) + '</b> per ' + esc(r.prezzo_per.toLowerCase()) + ' · ' + esc(r.livello) + (kg === null ? '' : ' · <b>' + fmtN(kg, 3) + ' €/kg</b>') + (Number(r.sconto_pct) ? ' · sconto ' + fmtN(r.sconto_pct, 1) + '%' : '') + (Number(r.premialita_1_pct) ? ' · premio ' + fmtN(r.premialita_1_pct, 1) + '%' : '') + (r.promo ? ' · ' + esc(r.promo) : '') + '</div></div>'; }).join('') + '</div>' +
       '<div class="row" style="margin-top:12px">' + acts.map(a1 => '<button class="sm" data-act="' + a1[0] + '">' + a1[1] + '</button>').join('') + '</div><div id="lstDetMsg"></div>';
@@ -738,7 +740,7 @@ function lstEdit(l){
   const can0 = [{v:'', l:'— nessuno —'}].concat(S.dict.canali.map(c => ({v:c.codice, l:c.codice + ' · ' + c.descrizione})));
   $('lstForm').innerHTML = '<label class="req" for="l_codice">Codice listino</label><input id="l_codice" type="text" placeholder="es. GDO-CONAD-2026" value="' + esc(l ? l.codice_listino : '') + '"' + (l ? ' disabled' : '') + '>' +
     '<label class="req" for="l_nome">Nome</label><input id="l_nome" type="text" value="' + esc(l ? l.nome : '') + '">' +
-    '<div class="grid2"><div><label for="l_cli">Cliente</label><select id="l_cli">' + opt(cli, l ? l.codice_cliente : '') + '</select></div><div><label for="l_can">oppure canale</label><select id="l_can">' + opt(can0, l ? l.canale : '') + '</select></div></div>' +
+    '<div class="grid2"><div><label for="l_cli">Cliente</label><select id="l_cli">' + opt(cli, l ? l.codice_cliente : '') + '</select></div><div><label for="l_can">oppure canale</label><select id="l_can">' + opt(can0, l ? l.canale : '') + '</select></div></div><p class="muted small" id="l_canHint"></p>' +
     '<div class="grid2"><div><label class="req" for="l_dal">Valido dal</label><input id="l_dal" type="date" value="' + esc(l ? String(l.valido_dal).slice(0, 10) : new Date().toISOString().slice(0, 10)) + '"></div><div><label for="l_al">Valido al</label><input id="l_al" type="date" value="' + esc(l && l.valido_al ? String(l.valido_al).slice(0, 10) : '') + '"></div></div>' +
     '<label for="l_note">Note</label><input id="l_note" type="text" value="' + esc(l ? (l.note || '') : '') + '">' +
     '<div class="sect">Righe (prezzi)</div><div id="l_righe">' + ((l && l.righe) || []).map((r, i) => rigaHtml(r, i)).join('') + '</div>' +
@@ -748,9 +750,36 @@ function lstEdit(l){
   $('lstMsg').innerHTML = '';
   $('lstFormCard').classList.remove('hidden'); $('lstFormCard').scrollIntoView({behavior: 'smooth', block: 'start'});
   if (!l) $('l_righe').insertAdjacentHTML('beforeend', rigaHtml(null, 0));
+  const syncCanale = () => {
+    const c = $('l_cli').value, cs = $('l_can');
+    if (c) { cs.value = ''; cs.disabled = true; const cl = (S.lists.clienti || []).find(x => x.codice === c);
+             $('l_canHint').textContent = 'Listino del cliente: il canale' + (cl && cl.canale ? ' (' + cl.canale + ')' : '') + ' viene dalla sua anagrafica.'; }
+    else { cs.disabled = false; $('l_canHint').textContent = 'Senza cliente: scegli un canale, oppure "nessuno" per il listino base valido per tutti.'; }
+  };
+  $('l_cli').onchange = syncCanale; syncCanale();
   bindRighe();
   $('btnRigaAdd').onclick = () => { $('l_righe').insertAdjacentHTML('beforeend', rigaHtml(null, $('l_righe').children.length)); bindRighe(); };
   $('btnLstCancel').onclick = () => { S.lstEditing = null; $('lstFormCard').classList.add('hidden'); };
+}
+function lstValida(p, righeEl){
+  const err = [], cod = String(p.codice_listino || '').trim().toUpperCase(), nome = String(p.nome || '').trim();
+  if (!/^[A-Z0-9][A-Z0-9._\/-]{1,29}$/.test(cod)) err.push('Codice listino: da 2 a 30 caratteri tra lettere, cifre e . _ / - (es. GDO-MULTICEDI-2026)');
+  if (nome.length < 2 || nome.length > 120) err.push('Nome del listino obbligatorio: da 2 a 120 caratteri');
+  if (p.codice_cliente && p.canale) err.push('Un listino vale per un cliente oppure per un canale, non per entrambi');
+  if (!p.valido_dal) err.push('Valido dal: scegli la data di inizio');
+  if (p.valido_al && p.valido_dal && p.valido_al < p.valido_dal) err.push('Validità: la data di fine non può essere prima della data di inizio');
+  const visti = {};
+  righeEl.forEach((r, i) => {
+    const n = i + 1, art = r.querySelector('.r_art').value, pr = r.querySelector('.r_prezzo');
+    if (!art && !pr.value && !pr.validity.badInput) { err.push('Riga ' + n + ' vuota: scegli articolo e prezzo, oppure toglila con ✕'); return; }
+    if (!art) err.push('Riga ' + n + ': scegli l\'articolo');
+    if (pr.validity.badInput || !(Number(pr.value) > 0)) err.push('Riga ' + n + ': prezzo mancante o non valido (maggiore di zero)');
+    [['.r_sc', 'sconto %'], ['.r_p1', 'premio 1 %'], ['.r_p2', 'premio 2 %']].forEach(([sel, nomeCampo]) => { const e = r.querySelector(sel);
+      if (e.validity.badInput || (e.value !== '' && !(Number(e.value) >= 0 && Number(e.value) < 100))) err.push('Riga ' + n + ': ' + nomeCampo + ' da 0 a 99,999'); });
+    const k = art + '|' + r.querySelector('.r_liv').value;
+    if (art) { if (visti[k]) err.push('Righe ' + visti[k] + ' e ' + n + ': stesso articolo con lo stesso livello di prezzo'); else visti[k] = n; }
+  });
+  return err;
 }
 function bindRighe(){ $('l_righe').querySelectorAll('.r_del').forEach(b => b.onclick = () => b.closest('.riga').remove()); }
 $('lstForm').onsubmit = async (ev) => {
@@ -759,6 +788,8 @@ $('lstForm').onsubmit = async (ev) => {
     sconto_pct: r.querySelector('.r_sc').value || 0, premialita_1_pct: r.querySelector('.r_p1').value || 0, premialita_2_pct: r.querySelector('.r_p2').value || 0, promo: r.querySelector('.r_promo').value || null}));
   const p = {listino_id: S.lstEditing.listino_id || null, codice_listino: S.lstEditing.codice_listino || $('l_codice').value, nome: $('l_nome').value, codice_cliente: $('l_cli').value || null, canale: $('l_can').value || null,
     valido_dal: $('l_dal').value, valido_al: $('l_al').value || null, note: $('l_note').value || null, motivo: $('l_motivo').value || null, righe};
+  const errori = lstValida(p, [...$('l_righe').querySelectorAll('.riga')]);
+  if (errori.length) { msg('lstMsg', '<b>Da correggere prima di salvare:</b><br>• ' + errori.map(esc).join('<br>• '), 'err'); $('lstMsg').scrollIntoView({behavior: 'smooth', block: 'center'}); return; }
   const b = $('btnLstSave'); b.disabled = true; b.textContent = 'Salvo…';
   try { const r = await rpc('fn_listino_salva', {p_dati: p}); msg('lstMsg', '✓ Bozza salvata: ' + esc(r.codice_listino) + ' v' + r.versione + ' con ' + (r.righe || []).length + ' righe.', 'ok'); await reloadLists(); $('lstFormCard').classList.add('hidden'); await lstOpen(r.listino_id); }
   catch(e) { msg('lstMsg', '<b>Non salvato:</b> ' + esc(explain(e)), 'err'); }
