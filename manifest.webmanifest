@@ -1,7 +1,7 @@
 {
   "name": "ERP Miraglia",
   "short_name": "ERP Miraglia",
-  "description": "ERP Miraglia S.r.l. dal telefono: cruscotto (KPI REALE verde / SIMULATO rosa), anagrafiche, listini con approvazione, import, audit.",
+  "description": "ERP Miraglia S.r.l. dal telefono e dal PC: cruscotto (KPI REALE verde / SIMULATO rosa), anagrafiche, listini con approvazione, import, audit.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -10,6 +10,17 @@
   "theme_color": "#2e5e4e",
   "lang": "it",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }

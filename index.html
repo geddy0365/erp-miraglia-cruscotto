@@ -121,6 +121,18 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 .stato.BOZZA{background:#fff3cd;color:#6b4e00}.stato.IN_APPROVAZIONE{background:#dcebf3;color:#164b63}.stato.APPROVATO{background:var(--reale-bg);color:var(--reale)}
 .stato.SCADUTO{background:#e9e9e9;color:#555}.stato.ANNULLATO{background:#f8d7da;color:#842029}
 @media (min-width:600px){.tiles{grid-template-columns:repeat(4,1fr)}}
+/* 0.3.3: finestre di conferma dentro la pagina (al posto di confirm/prompt, che nel programma per PC non esistono) */
+.dlg{position:fixed;inset:0;z-index:30;background:rgba(10,20,25,.55);display:flex;align-items:flex-end;justify-content:center;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+.dlg-box{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:16px;width:100%;max-width:520px;max-height:calc(100% - 8px);overflow:auto;box-shadow:0 10px 32px rgba(0,0,0,.35)}
+.dlg-box h3{margin:0 0 6px;font-size:17px;line-height:1.3;overflow-wrap:anywhere}
+.dlg-box p{margin:0 0 6px;color:var(--ink-2);font-size:15px;white-space:pre-wrap;overflow-wrap:anywhere}
+.dlg-box.pericolo h3{color:var(--critical)}
+.dlg-err{color:var(--critical);font-size:13px;min-height:18px;margin-top:4px}
+.dlg-btn{justify-content:flex-end;margin-top:10px}
+@media (min-width:600px){.dlg{align-items:center}}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.avviso{border-color:var(--warn)}.avviso h2{color:var(--warn)}
+.novita{border-color:var(--accent-2)}.novita ul{margin:4px 0 8px;padding-left:20px}.novita li{margin:3px 0}
 </style>
 </head>
 <body>
@@ -146,7 +158,8 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
       </div>
     </form>
     <div id="loginMsg"></div>
-    <div class="note small">Per avere l'icona sul telefono: menu di Chrome ⋮ → <b>Aggiungi a schermata Home</b>. <span id="installHint"></span></div>
+    <div class="note small" id="loginInstall">Per avere l'icona sul telefono: menu di Chrome ⋮ → <b>Aggiungi a schermata Home</b>. <span id="installHint"></span></div>
+    <details class="note small" id="loginApp"><summary><b>Scarica l'app per telefono (Android) o per PC (Windows)</b></summary><div class="list" id="loginGusci"></div></details>
   </section>
 
   <!-- APP -->
@@ -157,6 +170,8 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
       <button id="btnLogout" class="sm">Esci</button>
     </div>
     <div id="appMsg"></div>
+    <div class="card avviso hidden" id="bannerGuscio"></div>
+    <div class="card novita hidden" id="cardNovita"></div>
 
     <!-- CRUSCOTTO -->
     <div id="tabCruscotto">
@@ -231,6 +246,12 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
         <div class="row" style="margin-top:8px"><button id="btnImport" disabled>Carica nel database</button></div>
         <div id="impMsg"></div>
       </div>
+      <div class="card" id="cardApp">
+        <h2>App per telefono e PC</h2>
+        <p class="muted small">Le app aprono sempre l'ultima versione dell'ERP: ogni novità arriva da sola, senza reinstallare. Si riscarica solo quando cambia il programma, e lo segnala questa pagina.</p>
+        <div class="kv small" id="appCorrente" style="margin-bottom:6px"></div>
+        <div class="list" id="appGusci"></div>
+      </div>
       <div class="card"><h2>Storico modifiche (ultime 300)</h2><div class="tbl" id="storicoTable"></div></div>
       <div class="card">
         <h2>Account</h2>
@@ -254,12 +275,21 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
   <button data-tab="Altro" class="off"><span class="ic">≡</span>Altro</button>
 </nav>
 
+<div class="dlg hidden" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgTit">
+  <div class="dlg-box" id="dlgBox">
+    <h3 id="dlgTit"></h3>
+    <p id="dlgTxt"></p>
+    <div id="dlgCampo" class="hidden"><label for="dlgIn" id="dlgLbl"></label><input id="dlgIn" type="text" autocomplete="off" enterkeyhint="done" maxlength="500"><div class="dlg-err" id="dlgErr"></div></div>
+    <div class="row dlg-btn"><button type="button" class="sec" id="dlgNo">Annulla</button><button type="button" id="dlgOk">Conferma</button></div>
+  </div>
+</div>
+
 <script>
 'use strict';
 const CFG = {
   url: 'https://sqzxjuvxrtifhagjqjqq.supabase.co',
   key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxenhqdXZ4cnRpZmhhZ2pxanFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MjkzMjYsImV4cCI6MjEwNzEwNTMyNn0.uy1gZj0fcRb37QpzcPi2S99ZroAdOq2BmutF82E20A0',
-  schema: 'api', app: 'erp 0.3.2'
+  schema: 'api', app: 'erp 0.3.3', ver: '0.3.3'
 };
 const LS = 'erp_cruscotto_session';
 const S = { session: null, data: {}, perms: {}, dict: {calibri: [], canali: [], um: []}, lists: {articoli: [], clienti: [], fornitori: [], listini: []},
@@ -272,6 +302,59 @@ const fmtPct = (v) => (v === null || v === undefined || isNaN(v)) ? '—' : (Num
 const fmtD = (d) => d ? String(d).slice(0, 10).split('-').reverse().join('/') : '—';
 const CONFEZIONI = ['FUSTO', 'SECCHIO 3,5 KG', 'SECCHIO 5 KG', 'CF 1 KG', 'VASO', 'BUSTA', 'SFUSO', 'ALTRO'];
 const TIPI_FORN = ['OLIVE', 'MATERIALI', 'SERVIZI', 'TRASPORTI', 'ALTRO'];
+
+// ---------- app per telefono e PC (0.3.3) ----------
+// Il programma nativo (guscio) apre questa pagina pubblicata e si presenta nello user agent: "MiragliaERP-Android/1.0.0" o "MiragliaERP-Windows/1.0.0".
+// GUSCI = ultima versione disponibile di ogni programma (file pubblicati accanto alla pagina, cartella download/). Si aggiorna solo quando cambia il programma.
+const GUSCIO = (() => { const m = /MiragliaERP-(Android|Windows)\/(\d+\.\d+\.\d+)/.exec(navigator.userAgent || ''); return m ? {piattaforma: m[1], versione: m[2]} : null; })();
+const GUSCI = {
+  Android: {versione: '1.0.0', file: 'download/ERP_Miraglia_Android_1.0.0.apk', byte: 108169, sha256: 'a4894380c2e8fb3cc66e7a20c5c28440613db832627b16284c85e2d3482214f0', note: 'telefono o tablet Android 8 o successivo · si installa toccando il file scaricato'},
+  Windows: {versione: '1.0.0', file: 'download/ERP_Miraglia_Windows_1.0.0_Setup.exe', byte: 0, sha256: '', note: 'PC con Windows 10 o 11 a 64 bit · installazione per il solo utente, senza diritti di amministratore'}
+};   // byte e sha256 li scrive gusci/aggiorna_cruscotto.py dai file costruiti (0 = non ancora pubblicato)
+const verLt = (a, b) => { const x = String(a).split('.').map(Number), y = String(b).split('.').map(Number); for (let i = 0; i < 3; i++) { if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); } return false; };
+const fmtMB = (n) => (n / 1048576).toLocaleString('it-IT', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' MB';
+// Novità mostrate una volta dopo ogni aggiornamento (il cruscotto si evolve man mano)
+const NOVITA = {
+  '0.3.3': ['<b>App per telefono e PC</b>: in Altro → "App per telefono e PC" trovi l\'app Android e il programma per Windows. Aprono sempre l\'ultima versione dell\'ERP: le novità arrivano da sole.',
+            'Le conferme (approva, rifiuta, archivia, importa, AZZERA) si aprono <b>dentro l\'app</b>; il motivo, quando serve, si scrive lì.',
+            'In alto a destra vedi la versione dell\'<b>app</b>; nello Stato quella del <b>database</b>.']
+};
+
+// ---------- finestre di conferma dentro la pagina (0.3.3): sostituiscono confirm()/prompt() ----------
+const DLG = {res: null, prev: null};
+function dlg(o){
+  return new Promise(resolve => {
+    if (DLG.res) { const r = DLG.res; DLG.res = null; r(null); }   // una finestra alla volta
+    DLG.res = resolve; DLG.prev = document.activeElement;
+    $('dlgTit').textContent = o.titolo || 'Conferma';
+    $('dlgTxt').textContent = o.testo || ''; $('dlgTxt').classList.toggle('hidden', !o.testo);
+    $('dlgBox').classList.toggle('pericolo', !!o.pericolo);
+    const c = o.campo; $('dlgCampo').classList.toggle('hidden', !c); $('dlgErr').textContent = '';
+    if (c) { $('dlgLbl').textContent = c.etichetta || ''; $('dlgLbl').classList.toggle('req', !!c.obbligatorio); $('dlgIn').value = c.valore || ''; $('dlgIn').placeholder = c.segnaposto || ''; }
+    $('dlgOk').textContent = o.ok || 'Conferma'; $('dlgNo').textContent = o.no || 'Annulla';
+    $('dlg').classList.remove('hidden');
+    setTimeout(() => { try { (c ? $('dlgIn') : $('dlgOk')).focus(); } catch(e){} }, 30);
+  });
+}
+function dlgChiudi(v){
+  if ($('dlg').classList.contains('hidden')) return;
+  $('dlg').classList.add('hidden'); const r = DLG.res; DLG.res = null;
+  try { if (DLG.prev && DLG.prev.focus && document.contains(DLG.prev)) DLG.prev.focus(); } catch(e){}
+  if (r) r(v);
+}
+$('dlgOk').onclick = () => {
+  if ($('dlgCampo').classList.contains('hidden')) return dlgChiudi({testo: ''});
+  const v = $('dlgIn').value.trim();
+  if ($('dlgLbl').classList.contains('req') && !v) { $('dlgErr').textContent = 'Campo obbligatorio: scrivi il motivo (resta nel registro).'; $('dlgIn').focus(); return; }
+  dlgChiudi({testo: v});
+};
+$('dlgNo').onclick = () => dlgChiudi(null);
+$('dlg').addEventListener('click', (e) => { if (e.target === $('dlg')) dlgChiudi(null); });
+$('dlgIn').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('dlgOk').click(); } });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('dlg').classList.contains('hidden')) { e.preventDefault(); dlgChiudi(null); } });
+// conferma(): true/false · chiedi(): testo scritto ('' se facoltativo e vuoto) oppure null se annullato
+async function conferma(titolo, testo, ok, extra){ return !!(await dlg(Object.assign({titolo, testo, ok}, extra || {}))); }
+async function chiedi(titolo, testo, etichetta, obbligatorio, ok, extra){ const r = await dlg(Object.assign({titolo, testo, ok, campo: {etichetta, obbligatorio}}, extra || {})); return r ? r.testo : null; }
 
 // ---------- tema (chiaro di default; il pulsante alterna) ----------
 (function(){ try { const t = localStorage.getItem('erp_theme') || 'light'; document.documentElement.setAttribute('data-theme', t); } catch(e){ document.documentElement.setAttribute('data-theme', 'light'); } })();
@@ -372,7 +455,7 @@ $('btnLogout').onclick = logout;
 $('btnRefresh').onclick = () => refreshAll();
 $('formPwd').onsubmit = async (ev) => { ev.preventDefault(); try { await changePassword($('newPwd').value); $('newPwd').value=''; msg('pwdMsg', 'Password aggiornata.', 'ok'); } catch(e){ msg('pwdMsg', esc(explain(e)), 'err'); } };
 async function hardReset(){
-  if (!confirm('Azzerare l\'app? Verranno cancellati sessione, tema e cache locale. Nessun dato del server viene toccato.')) return;
+  if (!await conferma('Azzerare l\'app?', 'Vengono cancellati sessione, tema e cache di questo dispositivo, e si ricomincia dal login.\nNessun dato del server viene toccato.', 'AZZERA', {pericolo: true})) return;
   try { localStorage.clear(); sessionStorage.clear(); } catch(e){}
   try { if ('caches' in window) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } } catch(e){}
   try { if (navigator.serviceWorker) { const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r => r.unregister())); } } catch(e){}
@@ -386,7 +469,7 @@ async function refreshAll(){
   msg('appMsg', '');
   try {
     let touch = null;
-    try { touch = await rpc('fn_touch', {p_client: CFG.app + ' · ' + navigator.userAgent.slice(0, 120)}); } catch(e) { if (e.code === 'PGRST106' || /schema must be one of/i.test(e.message||'')) throw e; }
+    try { touch = await rpc('fn_touch', {p_client: CFG.app + ' · ' + clientNome() + ' · ' + navigator.userAgent.slice(0, 120)}); } catch(e) { if (e.code === 'PGRST106' || /schema must be one of/i.test(e.message||'')) throw e; }
     const stato = await view('v_stato_sistema');
     if (!stato || !stato.length) {
       msg('appMsg', '<b>Utente non autorizzato.</b> L\'indirizzo <code>' + esc(S.session.email) + '</code> è autenticato ma non è presente (o non è attivo) nell\'elenco <code>sec.app_users</code>. Il tentativo è stato registrato nell\'audit.', 'err');
@@ -413,11 +496,11 @@ function renderEmpty(){ ['tilesStato','classiDato','accountKv','kpiReale','kpiLi
 function tile(k, v, s, cls){ return '<div class="tile ' + (cls||'') + '"><div class="k">' + esc(k) + '</div><div class="v">' + v + '</div>' + (s ? '<div class="s">' + s + '</div>' : '') + '</div>'; }
 function renderAll(){
   const st = S.data.stato;
-  $('verBadge').textContent = 'v' + st.versione; $('oraServer').textContent = 'server ' + st.ora_server_rome;
+  $('verBadge').textContent = 'v' + CFG.ver; $('verBadge').title = 'App ' + CFG.ver + ' · database ' + st.versione; $('oraServer').textContent = 'server ' + st.ora_server_rome;
   $('hdrSub').textContent = 'PROD · ' + (st.ruolo || '').replace('erp_', '');
   const nApprov = S.lists.listini.filter(l => l.stato === 'APPROVATO').length;
   $('tilesStato').innerHTML =
-    tile('Versione in PROD', esc(st.versione), 'rilascio ' + esc(st.ultimo_rilascio_rome)) +
+    tile('Database in PROD', esc(st.versione), 'rilascio ' + esc(st.ultimo_rilascio_rome) + ' · app ' + esc(CFG.ver)) +
     tile('KPI definitivi', st.kpi_definitivi_disponibili ? '<span class="badge reale">● disponibili</span>' : 'in attesa', st.kpi_definitivi_disponibili ? 'dati REALI verificati' : 'nessuna vendita REALE verificata', st.kpi_definitivi_disponibili ? 'reale' : '') +
     tile('Righe REALE', fmtI(st.righe_reale), 'verde · verificabili', 'reale') +
     tile('Righe SIMULATO', fmtI(st.righe_simulato), 'rosa · mai nei KPI' + (Number(st.righe_archiviate) > 0 ? ' · ' + fmtI(st.righe_archiviate) + ' in quarantena' : ''), 'simulato') +
@@ -429,7 +512,8 @@ function renderAll(){
     '<b>Perché i KPI di vendita sono "in attesa":</b> non ci sono ancora vendite REALI verificate (arriveranno da Mexal o, dalla v0.5.0, dagli ordini dell\'app). Anagrafiche e listini approvati sono già dati REALI in verde.';
   const cl = S.data.classi || [];
   $('classiDato').innerHTML = cl.length ? '<table><tr><th>Tabella</th><th>Classe</th><th>Stato</th><th class="num">Righe</th></tr>' + cl.map(r => '<tr><td>' + esc(r.livello + '.' + r.tabella) + '</td><td>' + badgeClasse(r.classe) + '</td><td>' + esc(r.stato) + '</td><td class="num">' + fmtI(r.righe) + '</td></tr>').join('') + '</table>' : '<p class="muted">Nessuna riga caricata.</p>';
-  $('accountKv').innerHTML = '<b>Email</b><span>' + esc(st.utente) + '</span><b>Ruolo ERP</b><span>' + esc(st.ruolo) + '</span><b>Ultimo accesso</b><span>' + esc(S.data.touch ? S.data.touch.ora_rome : '—') + ' (registrato in audit)</span><b>App</b><span>' + esc(CFG.app) + '</span>';
+  $('accountKv').innerHTML = '<b>Email</b><span>' + esc(st.utente) + '</span><b>Ruolo ERP</b><span>' + esc(st.ruolo) + '</span><b>Ultimo accesso</b><span>' + esc(S.data.touch ? S.data.touch.ora_rome : '—') + ' (registrato in audit)</span><b>App</b><span>' + esc(CFG.app) + '</span><b>Programma</b><span>' + esc(clientNome()) + '</span>';
+  renderGusci(); renderNovita();
   $('permTable').innerHTML = '<table><tr><th>Modulo</th><th>Legge</th><th>Scrive</th><th>Approva</th></tr>' + Object.keys(S.perms).sort().map(m => '<tr><td>' + esc(m) + '</td><td>' + (S.perms[m].LEGGI ? '✓' : '—') + '</td><td>' + (S.perms[m].SCRIVI ? '✓' : '—') + '</td><td>' + (S.perms[m].APPROVA ? '✓' : '—') + '</td></tr>').join('') + '</table>';
   renderKpi(); renderListiniKpi(); renderF001(); renderDq(); renderGov(); renderAudit(); renderAna(); renderLst(); renderStorico();
 }
@@ -545,17 +629,18 @@ async function dqRun(){
 async function kpiApprova(){
   const k = S.data.kpid || [], todo = k.filter(x => !x.approved_by).map(x => x.kpi_code);
   if (!todo.length) return;
-  if (!confirm('Approvare ' + todo.length + ' definizioni KPI (' + todo.join(', ') + ') con la tua firma? L\'approvazione viene registrata in approval_log e change_log.')) return;
-  const nota = prompt('Nota (facoltativa):'); if (nota === null) return;
+  const nota = await chiedi('Approvare ' + todo.length + ' definizioni KPI?', todo.join(', ') + '\nFirmi con il tuo accesso: l\'approvazione viene registrata in approval_log e change_log.', 'Nota (facoltativa)', false, 'Approva');
+  if (nota === null) return;
   msg('kpiDictMsg', '');
   try { const r = await rpc('fn_kpi_approva', {p_codici: null, p_nota: nota || null}); msg('kpiDictMsg', 'Approvati ' + fmtI(r.approvati) + ' KPI (' + fmtI(r.totale_approvati) + '/' + fmtI(r.totale) + ').', 'ok'); await refreshAll(); }
   catch(e){ msg('kpiDictMsg', esc(explain(e)), 'err'); }
 }
 async function sorgenteStato(code, stato){
-  const lbl = {VERIFICATO: 'certificare', RIFIUTATO: 'archiviare in quarantena', RICEVUTO: 'riaprire'}[stato];
-  let motivo = null;
-  if (stato === 'RIFIUTATO') { motivo = prompt('Motivo dell\'archiviazione di ' + code + ' (obbligatorio: resta nel registro delle approvazioni):'); if (!motivo) return; }
-  else { if (!confirm('Vuoi ' + lbl + ' la sorgente ' + code + '?')) return; motivo = prompt('Nota (facoltativa):'); if (motivo === null) return; }
+  const t = {VERIFICATO: ['Certificare la sorgente ' + code + '?', 'Il file diventa VERIFICATO: i suoi dati possono entrare nei controlli e, se REALI, nei KPI.', 'Certifica'],
+             RIFIUTATO: ['Archiviare ' + code + ' in quarantena?', 'Il file resta consultabile e immutabile, ma esce dai controlli di qualità e dai KPI. Si può riaprire.', 'Archivia'],
+             RICEVUTO: ['Riaprire la sorgente ' + code + '?', 'Torna RICEVUTO: rientra nei controlli e i suoi difetti ricompaiono nella Qualità.', 'Riapri']}[stato];
+  const motivo = await chiedi(t[0], t[1], stato === 'RIFIUTATO' ? 'Motivo dell\'archiviazione (obbligatorio: resta nel registro delle approvazioni)' : 'Nota (facoltativa)', stato === 'RIFIUTATO', t[2]);
+  if (motivo === null) return;
   msg('manMsg', '');
   try { const r = await rpc('fn_sorgente_stato', {p_source_code: code, p_stato: stato, p_motivo: motivo || null}); msg('manMsg', 'Sorgente ' + esc(r.source_code) + ': ' + esc(r.stato_precedente) + ' → <b>' + esc(r.stato) + '</b>. Ricorda di eseguire i controlli (scheda Qualità).', 'ok'); await refreshAll(); }
   catch(e){ msg('manMsg', esc(explain(e)), 'err'); }
@@ -715,12 +800,18 @@ async function lstOpen(id){
 }
 async function lstAction(l, act, btn){
   if (act === 'edit') return lstEdit(l);
-  let nota = null;
-  if (act === 'RIFIUTA') { nota = prompt('Motivo del rifiuto (torna in bozza):'); if (nota === null) return; }
-  if (act === 'ANNULLA' && !confirm('Annullare il listino ' + l.codice_listino + ' v' + l.versione + '? Resta nello storico, non si può riaprire.')) return;
-  if (act === 'APPROVA' && !confirm('Approvare ' + l.codice_listino + ' v' + l.versione + '? I prezzi diventano REALI/VERIFICATI e entrano nel database analitico.')) return;
-  if (act === 'INVIA') nota = prompt('Nota per chi approva (facoltativa):') || null;
-  if (act === 'NUOVA_VERSIONE') nota = prompt('Motivo della nuova versione (es. rincaro 2027):') || null;
+  const id = l.codice_listino + ' v' + l.versione;
+  const q = {
+    INVIA: ['Inviare ' + id + ' in approvazione?', 'Dopo l\'invio il listino non si modifica finché non viene approvato o rifiutato.', 'Nota per chi approva (facoltativa)', false, 'Invia'],
+    APPROVA: ['Approvare ' + id + '?', 'I prezzi diventano REALI e VERIFICATI ed entrano nel database analitico (verdi nel Cruscotto).', 'Nota (facoltativa)', false, 'Approva'],
+    RIFIUTA: ['Rifiutare ' + id + '?', 'Il listino torna in bozza con il motivo, visibile a chi lo ha proposto.', 'Motivo del rifiuto (obbligatorio)', true, 'Rifiuta'],
+    ANNULLA: ['Annullare il listino ' + id + '?', 'Resta nello storico ma non si può riaprire.', 'Motivo (facoltativo)', false, 'Annulla il listino', {pericolo: true, no: 'Indietro'}],
+    NUOVA_VERSIONE: ['Creare la versione ' + (Number(l.versione) + 1) + ' di ' + l.codice_listino + '?', 'Si crea una copia in bozza da modificare; quando la approvi, la versione attuale scade il giorno prima.', 'Motivo (es. rincaro 2027)', false, 'Crea la bozza']
+  }[act];
+  if (!q) return;
+  const t = await chiedi(q[0], q[1], q[2], q[3], q[4], q[5]);
+  if (t === null) return;
+  const nota = t || null;
   btn.disabled = true;
   try { const r = await rpc('fn_listino_azione', {p_listino_id: l.listino_id, p_azione: act, p_nota: nota}); await reloadLists(); await lstOpen(r.listino_id); msg('lstDetMsg', '✓ ' + act.replace('_', ' ') + ' eseguito.', 'ok'); }
   catch(e) { msg('lstDetMsg', '<b>Non eseguito:</b> ' + esc(explain(e)), 'err'); btn.disabled = false; }
@@ -848,7 +939,7 @@ $('impFile').onchange = async () => {
 };
 $('btnImport').onclick = async () => {
   if (!S.imp) return;
-  if (!confirm('Caricare nel database ' + ((S.imp.articoli || []).length) + ' articoli, ' + ((S.imp.clienti || []).length) + ' clienti e ' + ((S.imp.listini || []).length) + ' righe di listino (in bozza)? Tutto o niente.')) return;
+  if (!await conferma('Caricare il file nel database?', fmtI((S.imp.articoli || []).length) + ' articoli, ' + fmtI((S.imp.clienti || []).length) + ' clienti e ' + fmtI((S.imp.listini || []).length) + ' righe di listino (in bozza).\nTutto o niente: se una riga è sbagliata non viene scritto nulla.', 'Carica')) return;
   const b = $('btnImport'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Carico…';
   try { const r = await rpc('fn_import_m01', {p_dati: S.imp}); msg('impMsg', '✓ Import eseguito: ' + fmtI(r.articoli) + ' articoli, ' + fmtI(r.clienti) + ' clienti, ' + fmtI(r.fornitori) + ' fornitori, ' + fmtI(r.listini) + ' listini (in BOZZA: approvali nella scheda Listini). Tutto è nel registro delle modifiche.', 'ok'); S.imp = null; $('impFile').value = ''; $('impPreview').innerHTML = ''; await reloadLists(); }
   catch(e) { msg('impMsg', '<b>Import non eseguito</b> (nessuna riga scritta):\n' + esc(explain(e)).replace(/ \|\| /g, '\n'), 'err'); b.disabled = false; }
@@ -860,7 +951,60 @@ let deferredInstall = null;
 window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; $('installHint').innerHTML = '<button type="button" id="btnInstall" style="margin-top:6px">Installa sul telefono</button>'; $('btnInstall').onclick = async () => { deferredInstall.prompt(); deferredInstall = null; $('installHint').textContent = ''; }; });
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
 
+// ---------- app per telefono e PC: programma in uso, download, avviso di aggiornamento, novità (0.3.3) ----------
+function clientNome(){
+  if (GUSCIO) return 'app ' + GUSCIO.piattaforma + ' ' + GUSCIO.versione;
+  let inst = false; try { inst = window.matchMedia('(display-mode: standalone)').matches; } catch(e){}
+  return inst ? 'browser (icona installata)' : 'browser';
+}
+function gusciHtml(soloAggiornamenti){
+  const ic = {Android: '📱', Windows: '💻'};
+  return Object.keys(GUSCI).map(p => {
+    const g = GUSCI[p], mio = GUSCIO && GUSCIO.piattaforma === p, vecchio = mio && verLt(GUSCIO.versione, g.versione);
+    if (soloAggiornamenti && !vecchio) return '';
+    const pronto = g.byte > 0 && /^[0-9a-f]{64}$/.test(g.sha256);
+    const stato = mio ? (vecchio ? ' <span class="badge warn">la tua è la ' + esc(GUSCIO.versione) + ': aggiorna</span>' : ' <span class="badge good">✓ è quella che stai usando</span>') : '';
+    return '<div class="it" style="cursor:default"><div class="t">' + ic[p] + ' ' + (p === 'Android' ? 'App per Android' : 'Programma per Windows') + ' <span class="badge info">v' + esc(g.versione) + '</span>' + stato + '</div>' +
+      '<div class="d">' + esc(g.note) + (pronto ? ' · ' + fmtMB(g.byte) + '<br><span class="small">SHA-256 ' + esc(g.sha256.slice(0, 16)) + '… (impronta per verificare il file)</span>' : '<br><i>in preparazione</i>') + '</div>' +
+      (pronto && !(mio && !vecchio) ? '<div class="row" style="margin-top:6px"><a class="btn sm" href="' + esc(g.file) + '" download>' + (vecchio ? 'Scarica l\'aggiornamento' : 'Scarica') + '</a></div>' : '') + '</div>';
+  }).join('');
+}
+function renderGusci(){
+  $('appCorrente').innerHTML = '<b>Stai usando</b><span>' + esc(clientNome()) + '</span><b>ERP</b><span>app ' + esc(CFG.ver) + (S.data.stato ? ' · database ' + esc(S.data.stato.versione) : '') + '</span>';
+  $('appGusci').innerHTML = gusciHtml(false);
+  const agg = gusciHtml(true);
+  $('bannerGuscio').classList.toggle('hidden', !agg);
+  $('bannerGuscio').innerHTML = agg ? '<h2>Aggiornamento del programma disponibile</h2><p class="muted small">Si installa sopra quello che hai: accesso e impostazioni restano.</p><div class="list">' + agg + '</div>' : '';
+}
+function renderNovita(){
+  let vista = null; try { vista = localStorage.getItem('erp_novita_vista'); } catch(e){}
+  const n = NOVITA[CFG.ver];
+  if (!n || vista === CFG.ver) { $('cardNovita').classList.add('hidden'); return; }
+  $('cardNovita').innerHTML = '<h2>Novità della versione ' + esc(CFG.ver) + '</h2><ul>' + n.map(x => '<li>' + x + '</li>').join('') + '</ul><button class="sm" id="btnNovitaOk">Ok, ho letto</button>';
+  $('cardNovita').classList.remove('hidden');
+  $('btnNovitaOk').onclick = () => { try { localStorage.setItem('erp_novita_vista', CFG.ver); } catch(e){} $('cardNovita').classList.add('hidden'); };
+}
+// Tasto "Indietro" del telefono (app Android): chiude la finestra aperta, poi la scheda aperta, poi torna al Cruscotto.
+// Restituisce true se ha gestito il tasto, false se l'app può chiudersi.
+window.erpIndietro = function(){
+  if (!$('dlg').classList.contains('hidden')) { dlgChiudi(null); return true; }
+  if ($('viewApp').classList.contains('hidden')) return false;
+  const chiudiModulo = (card, chiudi) => { conferma('Chiudere senza salvare?', 'Le modifiche non salvate vanno perse.', 'Chiudi senza salvare', {no: 'Resta qui'}).then(ok => { if (ok && !$(card).classList.contains('hidden')) chiudi(); }); return true; };
+  if (S.tab === 'Listini' && !$('lstFormCard').classList.contains('hidden')) return chiudiModulo('lstFormCard', () => { S.lstEditing = null; $('lstFormCard').classList.add('hidden'); });
+  if (S.tab === 'Listini' && !$('lstDetail').classList.contains('hidden')) { $('lstDetail').classList.add('hidden'); return true; }
+  if (S.tab === 'Anagrafiche' && !$('anaFormCard').classList.contains('hidden')) return chiudiModulo('anaFormCard', anaCloseForm);
+  if (S.tab === 'Cruscotto' && S.sub.Cruscotto !== 'Stato') { setSub('Cruscotto', 'Stato'); window.scrollTo(0, 0); return true; }
+  if (S.tab !== 'Cruscotto') { setTab('Cruscotto'); return true; }
+  return false;
+};
+
 // ---------- avvio ----------
+$('verBadge').textContent = 'v' + CFG.ver; $('verBadge').title = 'Versione dell\'app';
+(function(){
+  const agg = GUSCIO ? gusciHtml(true) : gusciHtml(false);
+  $('loginGusci').innerHTML = agg; $('loginApp').classList.toggle('hidden', !agg);
+  if (GUSCIO) $('loginInstall').classList.add('hidden');   // dentro l'app non serve "Aggiungi a schermata Home"
+})();
 loadSession();
 if (S.session) { enter().catch(e => showLogin(explain(e), true)); } else { showLogin(''); }
 </script>
