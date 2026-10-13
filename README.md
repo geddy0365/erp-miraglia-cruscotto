@@ -6,4 +6,4 @@ Nessun dato aziendale passa o risiede qui: i dati vengono letti dal telefono del
 La pagina contiene solo l'indirizzo del progetto e la chiave `anon`, pubblica per costruzione: senza un utente in allow-list ogni vista restituisce 0 righe.
 
 Sorgente e documentazione: repository privato `erp-miraglia` (`app/cruscotto.html`, `docs/MANUALE_TECNICO.md` §12, `docs/MANUALE_UTENTE_CRUSCOTTO.md`).
-Versione pubblicata: `index.html` SHA-256 `57f4ebffd4541b2d2d85d74a80b26a0a2b94c74c54841607bcde9ca1ad1d181a`.
+Versione pubblicata: `index.html` SHA-256 `39952ef8bbb9396012a6502d5b0681e351208b6a76f78c4cc18019c8454ae113`.

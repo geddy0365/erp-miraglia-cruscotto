@@ -251,6 +251,7 @@ a.btn{display:inline-flex;align-items:center;justify-content:center;text-decorat
         <p class="muted small">Le app aprono sempre l'ultima versione dell'ERP: ogni novità arriva da sola, senza reinstallare. Si riscarica solo quando cambia il programma, e lo segnala questa pagina.</p>
         <div class="kv small" id="appCorrente" style="margin-bottom:6px"></div>
         <div class="list" id="appGusci"></div>
+        <div id="appWeb" style="margin-top:8px"></div>
       </div>
       <div class="card"><h2>Storico modifiche (ultime 300)</h2><div class="tbl" id="storicoTable"></div></div>
       <div class="card">
@@ -308,8 +309,8 @@ const TIPI_FORN = ['OLIVE', 'MATERIALI', 'SERVIZI', 'TRASPORTI', 'ALTRO'];
 // GUSCI = ultima versione disponibile di ogni programma (file pubblicati accanto alla pagina, cartella download/). Si aggiorna solo quando cambia il programma.
 const GUSCIO = (() => { const m = /MiragliaERP-(Android|Windows)\/(\d+\.\d+\.\d+)/.exec(navigator.userAgent || ''); return m ? {piattaforma: m[1], versione: m[2]} : null; })();
 const GUSCI = {
-  Android: {versione: '1.0.0', file: 'download/ERP_Miraglia_Android_1.0.0.apk', byte: 108169, sha256: 'a4894380c2e8fb3cc66e7a20c5c28440613db832627b16284c85e2d3482214f0', note: 'telefono o tablet Android 8 o successivo · si installa toccando il file scaricato'},
-  Windows: {versione: '1.0.0', file: 'download/ERP_Miraglia_Windows_1.0.0_Setup.exe', byte: 0, sha256: '', note: 'PC con Windows 10 o 11 a 64 bit · installazione per il solo utente, senza diritti di amministratore'}
+  Android: {versione: '1.0.0', file: 'download/ERP_Miraglia_Android_1.0.0.apk', byte: 108169, sha256: 'a4894380c2e8fb3cc66e7a20c5c28440613db832627b16284c85e2d3482214f0', note: 'telefono o tablet Android 8 o successivo · tocca il file scaricato e, se richiesto, consenti l\'installazione (Play Protect in pausa)'},
+  Windows: {versione: '1.0.0', file: 'download/ERP_Miraglia_Windows_1.0.0_Setup.exe', byte: 103254213, sha256: '08bc076c67fc270663acca7f075e10aeb73bb4777eccb022320fc07edf35db00', note: 'PC con Windows 10 o 11 a 64 bit · si installa per il solo utente, senza diritti di amministratore · se Windows avvisa "PC protetto": Ulteriori informazioni → Esegui comunque'}
 };   // byte e sha256 li scrive gusci/aggiorna_cruscotto.py dai file costruiti (0 = non ancora pubblicato)
 const verLt = (a, b) => { const x = String(a).split('.').map(Number), y = String(b).split('.').map(Number); for (let i = 0; i < 3; i++) { if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0); } return false; };
 const fmtMB = (n) => (n / 1048576).toLocaleString('it-IT', {minimumFractionDigits: 1, maximumFractionDigits: 1}) + ' MB';
@@ -948,7 +949,15 @@ $('btnImport').onclick = async () => {
 
 // ---------- PWA ----------
 let deferredInstall = null;
-window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; $('installHint').innerHTML = '<button type="button" id="btnInstall" style="margin-top:6px">Installa sul telefono</button>'; $('btnInstall').onclick = async () => { deferredInstall.prompt(); deferredInstall = null; $('installHint').textContent = ''; }; });
+const DOVE = (() => { try { return matchMedia('(pointer: coarse)').matches ? 'sul telefono' : 'sul PC'; } catch(e){ return 'sul dispositivo'; } })();
+function pulsanteInstalla(id){ return '<button type="button" class="sm" id="' + id + '" style="margin-top:6px">Installa ' + DOVE + ' (senza scaricare nulla)</button>'; }
+async function installa(){ if (!deferredInstall) return; deferredInstall.prompt(); deferredInstall = null; $('installHint').textContent = ''; renderInstallaWeb(); }
+function renderInstallaWeb(){
+  if (GUSCIO) { $('appWeb').innerHTML = ''; return; }
+  $('appWeb').innerHTML = deferredInstall ? pulsanteInstalla('btnInstall2') : '<span class="muted small">Senza scaricare nulla: in Chrome o Edge, menu ⋮ → <b>Installa app</b> (sul telefono: <b>Aggiungi a schermata Home</b>). Si aggiorna da sola come le app.</span>';
+  if ($('btnInstall2')) $('btnInstall2').onclick = installa;
+}
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; $('installHint').innerHTML = pulsanteInstalla('btnInstall'); $('btnInstall').onclick = installa; renderInstallaWeb(); });
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
 
 // ---------- app per telefono e PC: programma in uso, download, avviso di aggiornamento, novità (0.3.3) ----------
@@ -971,7 +980,7 @@ function gusciHtml(soloAggiornamenti){
 }
 function renderGusci(){
   $('appCorrente').innerHTML = '<b>Stai usando</b><span>' + esc(clientNome()) + '</span><b>ERP</b><span>app ' + esc(CFG.ver) + (S.data.stato ? ' · database ' + esc(S.data.stato.versione) : '') + '</span>';
-  $('appGusci').innerHTML = gusciHtml(false);
+  $('appGusci').innerHTML = gusciHtml(false); renderInstallaWeb();
   const agg = gusciHtml(true);
   $('bannerGuscio').classList.toggle('hidden', !agg);
   $('bannerGuscio').innerHTML = agg ? '<h2>Aggiornamento del programma disponibile</h2><p class="muted small">Si installa sopra quello che hai: accesso e impostazioni restano.</p><div class="list">' + agg + '</div>' : '';
